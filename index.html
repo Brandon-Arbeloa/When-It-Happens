@@ -66,29 +66,6 @@
         input[type="range"] {
             width: 100%;
             margin-bottom: 10px;
-            -webkit-appearance: none;
-            height: 6px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 3px;
-            outline: none;
-        }
-
-        input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 20px;
-            height: 20px;
-            background: #FF006E;
-            border-radius: 50%;
-            cursor: pointer;
-        }
-
-        input[type="range"]::-moz-range-thumb {
-            width: 20px;
-            height: 20px;
-            background: #FF006E;
-            border-radius: 50%;
-            cursor: pointer;
         }
 
         select, textarea {
@@ -190,71 +167,11 @@
             background: rgba(255,255,255,0.05);
             border-left: 3px solid #FF006E;
             border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .result-section:hover {
-            background: rgba(255,255,255,0.08);
-            transform: translateX(5px);
         }
 
         .result-section h3 {
             color: #00F5FF;
             margin-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .expand-icon {
-            font-size: 0.8rem;
-            color: #888;
-        }
-
-        .detail-content {
-            display: none;
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 1px solid rgba(255,255,255,0.1);
-        }
-
-        .detail-content.show {
-            display: block;
-        }
-
-        .food-item {
-            background: rgba(0,255,136,0.1);
-            border: 1px solid rgba(0,255,136,0.3);
-            border-radius: 8px;
-            padding: 12px;
-            margin-bottom: 10px;
-        }
-
-        .food-item h4 {
-            color: #00FF88;
-            margin-bottom: 5px;
-        }
-
-        .price-tag {
-            color: #FFEA00;
-            font-weight: bold;
-        }
-
-        .order-btn {
-            background: #00FF88;
-            color: #000;
-            border: none;
-            padding: 5px 15px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            margin-top: 5px;
-        }
-
-        .order-btn:hover {
-            background: #00FF88;
-            transform: scale(1.05);
         }
 
         .loading {
@@ -345,9 +262,9 @@
         </div>
 
         <div class="action-buttons">
-            <button class="btn btn-primary" onclick="generatePlan()">🎉 GENERATE PARTY PLAN</button>
-            <button class="btn btn-secondary" onclick="randomizePlan()">🎲 SURPRISE ME</button>
-            <button class="btn btn-danger" onclick="panicMode()">⚡ PANIC MODE</button>
+            <button class="btn btn-primary" id="generateBtn">🎉 GENERATE PARTY PLAN</button>
+            <button class="btn btn-secondary" id="randomBtn">🎲 SURPRISE ME</button>
+            <button class="btn btn-danger" id="panicBtn">⚡ PANIC MODE</button>
         </div>
 
         <div class="loading" id="loading">
@@ -362,666 +279,41 @@
     </div>
 
     <script>
-        // Simple, direct JavaScript - no complicated event listeners
-        let selectedTheme = 'neon-noir';
+        console.log('Script starting...');
+        
+        // Global variable for selected theme
+        var selectedTheme = 'neon-noir';
 
-        // Update slider displays with proper comma formatting
-        document.getElementById('guests').oninput = function() {
-            let val = parseInt(this.value);
-            let display = '';
-            
-            if (val == 1) {
-                display = '1 person';
-            } else if (val >= 1000000000) {
-                display = (val/1000000000).toFixed(1) + 'B people';
-            } else if (val >= 1000000) {
-                display = (val/1000000).toFixed(1) + 'M people';
-            } else if (val >= 1000) {
-                display = (val/1000).toFixed(1) + 'K people';
-            } else {
-                display = val.toLocaleString() + ' people';
-            }
-            
+        // Define all functions globally
+        window.updateGuestSlider = function() {
+            var val = parseInt(document.getElementById('guests').value);
+            var display = val.toLocaleString() + ' people';
+            if (val == 1) display = '1 person';
             document.getElementById('guests-value').textContent = display;
-        };
-
-        document.getElementById('budget').oninput = function() {
-            let val = parseInt(this.value);
-            let display = '';
-            
-            if (val >= 1000000000) {
-                display = '
-
-        // Theme selection
-        document.querySelectorAll('.theme-btn').forEach(btn => {
-            btn.onclick = function() {
-                document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('selected'));
-                this.classList.add('selected');
-                selectedTheme = this.dataset.theme;
-            };
-        });
-
-        // Main generate function
-        function generatePlan() {
-            console.log('Generating party plan...');
-            
-            const guests = parseInt(document.getElementById('guests').value);
-            const budget = parseInt(document.getElementById('budget').value);
-            const vibe = document.getElementById('vibe').value;
-            const dietary = document.getElementById('dietary').value;
-            const alcohol = document.getElementById('alcohol').value;
-
-            // Show loading
-            document.getElementById('loading').classList.add('show');
-            document.getElementById('results').classList.remove('show');
-
-            // Simulate processing
-            setTimeout(() => {
-                const plan = createPlan(guests, budget, vibe, dietary, alcohol);
-                displayPlan(plan);
-                
-                document.getElementById('loading').classList.remove('show');
-                document.getElementById('results').classList.add('show');
-            }, 1500);
         }
 
-        function createPlan(guests, budget, vibe, dietary, alcohol) {
-            const budgetPerPerson = Math.floor(budget / guests);
-            
-            // Detailed food recommendations based on scale
-            let foodItems = [];
-            let foodSummary = '';
-            
-            if (guests <= 20) {
-                foodSummary = 'Artisan cheese boards, charcuterie, gourmet sliders, sushi platters';
-                foodItems = [
-                    { name: 'Artisan Cheese Board', quantity: Math.ceil(guests/5), unitPrice: 75, description: 'Selection of 5 premium cheeses, crackers, fruits', servings: '5 people per board' },
-                    { name: 'Charcuterie Platter', quantity: Math.ceil(guests/5), unitPrice: 85, description: 'Cured meats, olives, nuts, spreads', servings: '5 people per platter' },
-                    { name: 'Gourmet Slider Trio', quantity: Math.ceil(guests/2), unitPrice: 24, description: 'Beef, chicken, veggie options', servings: '2 people per set' },
-                    { name: 'Sushi Platter (48pc)', quantity: Math.ceil(guests/8), unitPrice: 120, description: 'California, spicy tuna, salmon rolls', servings: '8 people per platter' },
-                    { name: 'Mediterranean Mezze', quantity: Math.ceil(guests/10), unitPrice: 95, description: 'Hummus, falafel, pita, tzatziki', servings: '10 people per spread' }
-                ];
-            } else if (guests <= 100) {
-                foodSummary = 'Taco bar, pizza station, BBQ buffet, pasta bar';
-                foodItems = [
-                    { name: 'Taco Bar Setup', quantity: 1, unitPrice: guests * 18, description: 'Build-your-own tacos with all fixings', servings: `${guests} people` },
-                    { name: 'Pizza Party Package', quantity: Math.ceil(guests/8), unitPrice: 120, description: 'Assorted pizzas - 8 large pies', servings: '8 people per package' },
-                    { name: 'BBQ Buffet', quantity: 1, unitPrice: guests * 22, description: 'Brisket, pulled pork, sides', servings: `${guests} people` },
-                    { name: 'Pasta Station', quantity: 1, unitPrice: guests * 16, description: '3 pasta types, 4 sauces, salad', servings: `${guests} people` },
-                    { name: 'Asian Fusion Station', quantity: 1, unitPrice: guests * 20, description: 'Stir-fry, spring rolls, dumplings', servings: `${guests} people` }
-                ];
-            } else if (guests <= 1000) {
-                foodSummary = '3 food trucks, multiple buffet stations, catering teams';
-                foodItems = [
-                    { name: 'Food Truck #1 - Tacos', quantity: 4, unitPrice: 2500, description: '4-hour service, unlimited tacos', servings: '250 people per hour' },
-                    { name: 'Food Truck #2 - BBQ', quantity: 4, unitPrice: 3000, description: '4-hour service, full BBQ menu', servings: '250 people per hour' },
-                    { name: 'Food Truck #3 - Desserts', quantity: 4, unitPrice: 2000, description: '4-hour service, ice cream & sweets', servings: '250 people per hour' },
-                    { name: 'Buffet Stations (5)', quantity: 1, unitPrice: guests * 35, description: 'International cuisine stations', servings: `${guests} people` },
-                    { name: 'Catering Staff Team', quantity: Math.ceil(guests/50), unitPrice: 500, description: 'Professional service staff', servings: '50 guests per staff' }
-                ];
-            } else {
-                foodSummary = 'Festival food court with 10+ vendors, multiple catering zones';
-                foodItems = [
-                    { name: 'Food Vendor Package A', quantity: 5, unitPrice: 5000, description: 'Tacos, burgers, pizza, BBQ, Asian', servings: '200 people/hour each' },
-                    { name: 'Food Vendor Package B', quantity: 5, unitPrice: 5000, description: 'Vegan, desserts, coffee, smoothies, ice cream', servings: '200 people/hour each' },
-                    { name: 'VIP Catering Zone', quantity: 1, unitPrice: 25000, description: 'Premium buffet for VIP area', servings: '500 VIP guests' },
-                    { name: 'Hydration Stations', quantity: 10, unitPrice: 500, description: 'Water, sports drinks, cooling zones', servings: '1000 people each' },
-                    { name: 'Festival Staff Catering', quantity: 1, unitPrice: 10000, description: 'Feed your crew and volunteers', servings: 'All staff' }
-                ];
-            }
-
-            // Calculate total food cost
-            let totalFoodCost = 0;
-            foodItems.forEach(item => {
-                item.totalPrice = item.quantity * item.unitPrice;
-                totalFoodCost += item.totalPrice;
-            });
-
-            // Music setup
-            let music = '';
-            if (guests <= 20) {
-                music = 'Curated Spotify playlist + quality Bluetooth speaker';
-            } else if (guests <= 100) {
-                music = 'Professional DJ with sound system';
-            } else if (guests <= 1000) {
-                music = 'Live band + DJ, professional stage and lighting';
-            } else {
-                music = 'Multiple stages, headline acts, full festival production';
-            }
-
-            // Staffing
-            const staff = {
-                bartenders: Math.max(1, Math.ceil(guests / 75)),
-                servers: Math.ceil(guests / 25),
-                security: Math.ceil(guests / 100),
-                cleanup: Math.ceil(guests / 50)
-            };
-
-            return {
-                guests: guests,
-                budget: budget,
-                budgetPerPerson: budgetPerPerson,
-                vibe: vibe,
-                theme: selectedTheme,
-                dietary: dietary,
-                alcohol: alcohol,
-                foodSummary: foodSummary,
-                foodItems: foodItems,
-                totalFoodCost: totalFoodCost,
-                music: music,
-                staff: staff
-            };
-        }
-
-        function displayPlan(plan) {
-            // Create food details HTML
-            let foodDetailsHTML = '';
-            plan.foodItems.forEach(item => {
-                foodDetailsHTML += `
-                    <div class="food-item">
-                        <h4>${item.name}</h4>
-                        <p><strong>Quantity:</strong> ${item.quantity.toLocaleString()} ${item.quantity > 1 ? 'units' : 'unit'}</p>
-                        <p><strong>Description:</strong> ${item.description}</p>
-                        <p><strong>Serves:</strong> ${item.servings}</p>
-                        <p class="price-tag">Unit Price: ${item.unitPrice.toLocaleString()}</p>
-                        <p class="price-tag">Total: ${item.totalPrice.toLocaleString()}</p>
-                        <button class="order-btn" onclick="alert('One-click ordering coming soon! Partner: ${item.name}')">
-                            📦 Quick Order
-                        </button>
-                    </div>
-                `;
-            });
-
-            let html = `
-                <div class="result-section" onclick="toggleSection('overview')">
-                    <h3>📊 Overview <span class="expand-icon">▼</span></h3>
-                    <div id="overview-details" class="detail-content show">
-                        <p><strong>Guests:</strong> ${plan.guests.toLocaleString()}</p>
-                        <p><strong>Budget:</strong> ${plan.budget.toLocaleString()} (${plan.budgetPerPerson.toLocaleString()}/person)</p>
-                        <p><strong>Vibe:</strong> ${plan.vibe.toUpperCase()}</p>
-                        <p><strong>Theme:</strong> ${plan.theme.replace('-', ' ').toUpperCase()}</p>
-                    </div>
-                </div>
-
-                <div class="result-section" onclick="toggleSection('food')">
-                    <h3>🍕 Food & Catering <span class="expand-icon">Click to expand</span></h3>
-                    <p>${plan.foodSummary}</p>
-                    <p class="price-tag">Total Food Budget: ${plan.totalFoodCost.toLocaleString()}</p>
-                    ${plan.dietary ? `<p><strong>Dietary Notes:</strong> ${plan.dietary}</p>` : ''}
-                    <div id="food-details" class="detail-content">
-                        <h4 style="color: #00FF88; margin-bottom: 15px;">Detailed Food Order:</h4>
-                        ${foodDetailsHTML}
-                    </div>
-                </div>
-
-                <div class="result-section" onclick="toggleSection('drinks')">
-                    <h3>🍹 Drinks <span class="expand-icon">▼</span></h3>
-                    <div id="drinks-details" class="detail-content">
-                        <p><strong>Bar Type:</strong> ${plan.alcohol.replace('-', ' ').toUpperCase()}</p>
-                        <p><strong>Estimated Quantities:</strong></p>
-                        <ul style="margin-left: 20px;">
-                            <li>Alcoholic Drinks: ${(plan.guests * 3).toLocaleString()} servings</li>
-                            <li>Water Bottles: ${(plan.guests * 2).toLocaleString()}</li>
-                            <li>Soft Drinks: ${(plan.guests * 1).toLocaleString()}</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="result-section" onclick="toggleSection('music')">
-                    <h3>🎵 Music & Entertainment <span class="expand-icon">▼</span></h3>
-                    <div id="music-details" class="detail-content">
-                        <p>${plan.music}</p>
-                    </div>
-                </div>
-
-                <div class="result-section" onclick="toggleSection('staffing')">
-                    <h3>👥 Staffing Needs <span class="expand-icon">▼</span></h3>
-                    <div id="staffing-details" class="detail-content">
-                        <p><strong>Bartenders:</strong> ${plan.staff.bartenders.toLocaleString()}</p>
-                        <p><strong>Servers:</strong> ${plan.staff.servers.toLocaleString()}</p>
-                        <p><strong>Security:</strong> ${plan.staff.security.toLocaleString()}</p>
-                        <p><strong>Cleanup Crew:</strong> ${plan.staff.cleanup.toLocaleString()}</p>
-                        <p><strong>Total Staff:</strong> ${(plan.staff.bartenders + plan.staff.servers + plan.staff.security + plan.staff.cleanup).toLocaleString()} people</p>
-                    </div>
-                </div>
-            `;
-
-            document.getElementById('results-content').innerHTML = html;
-        }
-
-        function toggleSection(section) {
-            event.stopPropagation();
-            const details = document.getElementById(section + '-details');
-            if (details) {
-                details.classList.toggle('show');
-                // Update expand icon
-                const icon = event.currentTarget.querySelector('.expand-icon');
-                if (icon) {
-                    icon.textContent = details.classList.contains('show') ? '▲' : '▼';
-                }
-            }
-        }
-
-        function randomizePlan() {
-            // Randomize all inputs
-            document.getElementById('guests').value = Math.floor(Math.random() * 9999) + 1;
-            document.getElementById('budget').value = Math.floor(Math.random() * 99900) + 100;
-            document.getElementById('vibe').selectedIndex = Math.floor(Math.random() * 5);
-            document.getElementById('alcohol').selectedIndex = Math.floor(Math.random() * 6);
-            
-            // Update displays
-            document.getElementById('guests').oninput();
-            document.getElementById('budget').oninput();
-            
-            // Random theme
-            const themes = document.querySelectorAll('.theme-btn');
-            themes.forEach(b => b.classList.remove('selected'));
-            const randomTheme = themes[Math.floor(Math.random() * themes.length)];
-            randomTheme.classList.add('selected');
-            selectedTheme = randomTheme.dataset.theme;
-            
-            // Generate
-            generatePlan();
-        }
-
-        function panicMode() {
-            const guests = parseInt(document.getElementById('guests').value);
-            
-            let html = `
-                <div class="result-section" style="border-color: #FF0000; background: rgba(255,0,0,0.1);">
-                    <h3>🚨 PANIC MODE - 5 MINUTE PARTY PLAN!</h3>
-                    <p><strong>FOOD (2 min):</strong> Order ${Math.ceil(guests/3)} pizzas NOW! Grab all chips and candy!</p>
-                    <p><strong>DRINKS (1 min):</strong> Ice everything! Text everyone to BYOB!</p>
-                    <p><strong>MUSIC (30 sec):</strong> Spotify "Today's Top Hits" at MAX volume!</p>
-                    <p><strong>SPACE (1 min):</strong> Hide mess in closets! Push furniture to walls!</p>
-                    <p><strong>VIBE (30 sec):</strong> Dim lights! Light candles! Text "PARTY NOW!"</p>
-                    <p style="margin-top: 20px; font-size: 1.2rem; color: #FFEA00;"><strong>GO TIME! IT'S HAPPENING!</strong></p>
-                </div>
-            `;
-            
-            document.getElementById('results-content').innerHTML = html;
-            document.getElementById('results').classList.add('show');
-        }
-
-        // Test on load
-        console.log('When It Happens loaded successfully!');
-        console.log('Try clicking Generate Party Plan button');
-    </script>
-</body>
-</html> + (val/1000000000).toFixed(1) + 'B';
-            } else if (val >= 1000000) {
-                display = '
-
-        // Theme selection
-        document.querySelectorAll('.theme-btn').forEach(btn => {
-            btn.onclick = function() {
-                document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('selected'));
-                this.classList.add('selected');
-                selectedTheme = this.dataset.theme;
-            };
-        });
-
-        // Main generate function
-        function generatePlan() {
-            console.log('Generating party plan...');
-            
-            const guests = parseInt(document.getElementById('guests').value);
-            const budget = parseInt(document.getElementById('budget').value);
-            const vibe = document.getElementById('vibe').value;
-            const dietary = document.getElementById('dietary').value;
-            const alcohol = document.getElementById('alcohol').value;
-
-            // Show loading
-            document.getElementById('loading').classList.add('show');
-            document.getElementById('results').classList.remove('show');
-
-            // Simulate processing
-            setTimeout(() => {
-                const plan = createPlan(guests, budget, vibe, dietary, alcohol);
-                displayPlan(plan);
-                
-                document.getElementById('loading').classList.remove('show');
-                document.getElementById('results').classList.add('show');
-            }, 1500);
-        }
-
-        function createPlan(guests, budget, vibe, dietary, alcohol) {
-            const budgetPerPerson = Math.floor(budget / guests);
-            
-            // Food recommendations based on scale
-            let food = '';
-            if (guests <= 20) {
-                food = 'Artisan cheese boards, charcuterie, gourmet sliders, sushi platters';
-            } else if (guests <= 100) {
-                food = 'Taco bar, pizza station, BBQ buffet, pasta bar';
-            } else if (guests <= 1000) {
-                food = '3 food trucks, multiple buffet stations, catering teams';
-            } else {
-                food = 'Festival food court with 10+ vendors, multiple catering zones';
-            }
-
-            // Music setup
-            let music = '';
-            if (guests <= 20) {
-                music = 'Curated Spotify playlist + quality Bluetooth speaker';
-            } else if (guests <= 100) {
-                music = 'Professional DJ with sound system';
-            } else if (guests <= 1000) {
-                music = 'Live band + DJ, professional stage and lighting';
-            } else {
-                music = 'Multiple stages, headline acts, full festival production';
-            }
-
-            // Staffing
-            const staff = {
-                bartenders: Math.max(1, Math.ceil(guests / 75)),
-                servers: Math.ceil(guests / 25),
-                security: Math.ceil(guests / 100),
-                cleanup: Math.ceil(guests / 50)
-            };
-
-            return {
-                guests: guests,
-                budget: budget,
-                budgetPerPerson: budgetPerPerson,
-                vibe: vibe,
-                theme: selectedTheme,
-                dietary: dietary,
-                alcohol: alcohol,
-                food: food,
-                music: music,
-                staff: staff
-            };
-        }
-
-        function displayPlan(plan) {
-            let html = `
-                <div class="result-section">
-                    <h3>📊 Overview</h3>
-                    <p><strong>Guests:</strong> ${plan.guests.toLocaleString()}</p>
-                    <p><strong>Budget:</strong> $${plan.budget.toLocaleString()} ($${plan.budgetPerPerson}/person)</p>
-                    <p><strong>Vibe:</strong> ${plan.vibe.toUpperCase()}</p>
-                    <p><strong>Theme:</strong> ${plan.theme.replace('-', ' ').toUpperCase()}</p>
-                </div>
-
-                <div class="result-section">
-                    <h3>🍕 Food & Catering</h3>
-                    <p>${plan.food}</p>
-                    ${plan.dietary ? `<p><strong>Dietary Notes:</strong> ${plan.dietary}</p>` : ''}
-                </div>
-
-                <div class="result-section">
-                    <h3>🍹 Drinks</h3>
-                    <p><strong>Bar Type:</strong> ${plan.alcohol.replace('-', ' ').toUpperCase()}</p>
-                    <p><strong>Estimated Quantities:</strong> ${Math.ceil(plan.guests * 3)} drinks, ${plan.guests * 2} waters</p>
-                </div>
-
-                <div class="result-section">
-                    <h3>🎵 Music & Entertainment</h3>
-                    <p>${plan.music}</p>
-                </div>
-
-                <div class="result-section">
-                    <h3>👥 Staffing Needs</h3>
-                    <p><strong>Bartenders:</strong> ${plan.staff.bartenders}</p>
-                    <p><strong>Servers:</strong> ${plan.staff.servers}</p>
-                    <p><strong>Security:</strong> ${plan.staff.security}</p>
-                    <p><strong>Cleanup Crew:</strong> ${plan.staff.cleanup}</p>
-                </div>
-            `;
-
-            document.getElementById('results-content').innerHTML = html;
-        }
-
-        function randomizePlan() {
-            // Randomize all inputs
-            document.getElementById('guests').value = Math.floor(Math.random() * 9999) + 1;
-            document.getElementById('budget').value = Math.floor(Math.random() * 99900) + 100;
-            document.getElementById('vibe').selectedIndex = Math.floor(Math.random() * 5);
-            document.getElementById('alcohol').selectedIndex = Math.floor(Math.random() * 6);
-            
-            // Update displays
-            document.getElementById('guests').oninput();
-            document.getElementById('budget').oninput();
-            
-            // Random theme
-            const themes = document.querySelectorAll('.theme-btn');
-            themes.forEach(b => b.classList.remove('selected'));
-            const randomTheme = themes[Math.floor(Math.random() * themes.length)];
-            randomTheme.classList.add('selected');
-            selectedTheme = randomTheme.dataset.theme;
-            
-            // Generate
-            generatePlan();
-        }
-
-        function panicMode() {
-            const guests = parseInt(document.getElementById('guests').value);
-            
-            let html = `
-                <div class="result-section" style="border-color: #FF0000; background: rgba(255,0,0,0.1);">
-                    <h3>🚨 PANIC MODE - 5 MINUTE PARTY PLAN!</h3>
-                    <p><strong>FOOD (2 min):</strong> Order ${Math.ceil(guests/3)} pizzas NOW! Grab all chips and candy!</p>
-                    <p><strong>DRINKS (1 min):</strong> Ice everything! Text everyone to BYOB!</p>
-                    <p><strong>MUSIC (30 sec):</strong> Spotify "Today's Top Hits" at MAX volume!</p>
-                    <p><strong>SPACE (1 min):</strong> Hide mess in closets! Push furniture to walls!</p>
-                    <p><strong>VIBE (30 sec):</strong> Dim lights! Light candles! Text "PARTY NOW!"</p>
-                    <p style="margin-top: 20px; font-size: 1.2rem; color: #FFEA00;"><strong>GO TIME! IT'S HAPPENING!</strong></p>
-                </div>
-            `;
-            
-            document.getElementById('results-content').innerHTML = html;
-            document.getElementById('results').classList.add('show');
-        }
-
-        // Test on load
-        console.log('When It Happens loaded successfully!');
-        console.log('Try clicking Generate Party Plan button');
-    </script>
-</body>
-</html> + (val/1000000).toFixed(1) + 'M';
-            } else {
-                display = '
-
-        // Theme selection
-        document.querySelectorAll('.theme-btn').forEach(btn => {
-            btn.onclick = function() {
-                document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('selected'));
-                this.classList.add('selected');
-                selectedTheme = this.dataset.theme;
-            };
-        });
-
-        // Main generate function
-        function generatePlan() {
-            console.log('Generating party plan...');
-            
-            const guests = parseInt(document.getElementById('guests').value);
-            const budget = parseInt(document.getElementById('budget').value);
-            const vibe = document.getElementById('vibe').value;
-            const dietary = document.getElementById('dietary').value;
-            const alcohol = document.getElementById('alcohol').value;
-
-            // Show loading
-            document.getElementById('loading').classList.add('show');
-            document.getElementById('results').classList.remove('show');
-
-            // Simulate processing
-            setTimeout(() => {
-                const plan = createPlan(guests, budget, vibe, dietary, alcohol);
-                displayPlan(plan);
-                
-                document.getElementById('loading').classList.remove('show');
-                document.getElementById('results').classList.add('show');
-            }, 1500);
-        }
-
-        function createPlan(guests, budget, vibe, dietary, alcohol) {
-            const budgetPerPerson = Math.floor(budget / guests);
-            
-            // Food recommendations based on scale
-            let food = '';
-            if (guests <= 20) {
-                food = 'Artisan cheese boards, charcuterie, gourmet sliders, sushi platters';
-            } else if (guests <= 100) {
-                food = 'Taco bar, pizza station, BBQ buffet, pasta bar';
-            } else if (guests <= 1000) {
-                food = '3 food trucks, multiple buffet stations, catering teams';
-            } else {
-                food = 'Festival food court with 10+ vendors, multiple catering zones';
-            }
-
-            // Music setup
-            let music = '';
-            if (guests <= 20) {
-                music = 'Curated Spotify playlist + quality Bluetooth speaker';
-            } else if (guests <= 100) {
-                music = 'Professional DJ with sound system';
-            } else if (guests <= 1000) {
-                music = 'Live band + DJ, professional stage and lighting';
-            } else {
-                music = 'Multiple stages, headline acts, full festival production';
-            }
-
-            // Staffing
-            const staff = {
-                bartenders: Math.max(1, Math.ceil(guests / 75)),
-                servers: Math.ceil(guests / 25),
-                security: Math.ceil(guests / 100),
-                cleanup: Math.ceil(guests / 50)
-            };
-
-            return {
-                guests: guests,
-                budget: budget,
-                budgetPerPerson: budgetPerPerson,
-                vibe: vibe,
-                theme: selectedTheme,
-                dietary: dietary,
-                alcohol: alcohol,
-                food: food,
-                music: music,
-                staff: staff
-            };
-        }
-
-        function displayPlan(plan) {
-            let html = `
-                <div class="result-section">
-                    <h3>📊 Overview</h3>
-                    <p><strong>Guests:</strong> ${plan.guests.toLocaleString()}</p>
-                    <p><strong>Budget:</strong> $${plan.budget.toLocaleString()} ($${plan.budgetPerPerson}/person)</p>
-                    <p><strong>Vibe:</strong> ${plan.vibe.toUpperCase()}</p>
-                    <p><strong>Theme:</strong> ${plan.theme.replace('-', ' ').toUpperCase()}</p>
-                </div>
-
-                <div class="result-section">
-                    <h3>🍕 Food & Catering</h3>
-                    <p>${plan.food}</p>
-                    ${plan.dietary ? `<p><strong>Dietary Notes:</strong> ${plan.dietary}</p>` : ''}
-                </div>
-
-                <div class="result-section">
-                    <h3>🍹 Drinks</h3>
-                    <p><strong>Bar Type:</strong> ${plan.alcohol.replace('-', ' ').toUpperCase()}</p>
-                    <p><strong>Estimated Quantities:</strong> ${Math.ceil(plan.guests * 3)} drinks, ${plan.guests * 2} waters</p>
-                </div>
-
-                <div class="result-section">
-                    <h3>🎵 Music & Entertainment</h3>
-                    <p>${plan.music}</p>
-                </div>
-
-                <div class="result-section">
-                    <h3>👥 Staffing Needs</h3>
-                    <p><strong>Bartenders:</strong> ${plan.staff.bartenders}</p>
-                    <p><strong>Servers:</strong> ${plan.staff.servers}</p>
-                    <p><strong>Security:</strong> ${plan.staff.security}</p>
-                    <p><strong>Cleanup Crew:</strong> ${plan.staff.cleanup}</p>
-                </div>
-            `;
-
-            document.getElementById('results-content').innerHTML = html;
-        }
-
-        function randomizePlan() {
-            // Randomize all inputs
-            document.getElementById('guests').value = Math.floor(Math.random() * 9999) + 1;
-            document.getElementById('budget').value = Math.floor(Math.random() * 99900) + 100;
-            document.getElementById('vibe').selectedIndex = Math.floor(Math.random() * 5);
-            document.getElementById('alcohol').selectedIndex = Math.floor(Math.random() * 6);
-            
-            // Update displays
-            document.getElementById('guests').oninput();
-            document.getElementById('budget').oninput();
-            
-            // Random theme
-            const themes = document.querySelectorAll('.theme-btn');
-            themes.forEach(b => b.classList.remove('selected'));
-            const randomTheme = themes[Math.floor(Math.random() * themes.length)];
-            randomTheme.classList.add('selected');
-            selectedTheme = randomTheme.dataset.theme;
-            
-            // Generate
-            generatePlan();
-        }
-
-        function panicMode() {
-            const guests = parseInt(document.getElementById('guests').value);
-            
-            let html = `
-                <div class="result-section" style="border-color: #FF0000; background: rgba(255,0,0,0.1);">
-                    <h3>🚨 PANIC MODE - 5 MINUTE PARTY PLAN!</h3>
-                    <p><strong>FOOD (2 min):</strong> Order ${Math.ceil(guests/3)} pizzas NOW! Grab all chips and candy!</p>
-                    <p><strong>DRINKS (1 min):</strong> Ice everything! Text everyone to BYOB!</p>
-                    <p><strong>MUSIC (30 sec):</strong> Spotify "Today's Top Hits" at MAX volume!</p>
-                    <p><strong>SPACE (1 min):</strong> Hide mess in closets! Push furniture to walls!</p>
-                    <p><strong>VIBE (30 sec):</strong> Dim lights! Light candles! Text "PARTY NOW!"</p>
-                    <p style="margin-top: 20px; font-size: 1.2rem; color: #FFEA00;"><strong>GO TIME! IT'S HAPPENING!</strong></p>
-                </div>
-            `;
-            
-            document.getElementById('results-content').innerHTML = html;
-            document.getElementById('results').classList.add('show');
-        }
-
-        // Test on load
-        console.log('When It Happens loaded successfully!');
-        console.log('Try clicking Generate Party Plan button');
-    </script>
-</body>
-</html> + val.toLocaleString();
-            }
-            
+        window.updateBudgetSlider = function() {
+            var val = parseInt(document.getElementById('budget').value);
+            var display = '$' + val.toLocaleString();
             document.getElementById('budget-value').textContent = display;
-        };
+        }
 
-        // Theme selection
-        document.querySelectorAll('.theme-btn').forEach(btn => {
-            btn.onclick = function() {
-                document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('selected'));
-                this.classList.add('selected');
-                selectedTheme = this.dataset.theme;
-            };
-        });
-
-        // Main generate function
-        function generatePlan() {
+        window.generatePlan = function() {
             console.log('Generating party plan...');
             
-            const guests = parseInt(document.getElementById('guests').value);
-            const budget = parseInt(document.getElementById('budget').value);
-            const vibe = document.getElementById('vibe').value;
-            const dietary = document.getElementById('dietary').value;
-            const alcohol = document.getElementById('alcohol').value;
+            var guests = parseInt(document.getElementById('guests').value);
+            var budget = parseInt(document.getElementById('budget').value);
+            var vibe = document.getElementById('vibe').value;
+            var dietary = document.getElementById('dietary').value;
+            var alcohol = document.getElementById('alcohol').value;
 
             // Show loading
             document.getElementById('loading').classList.add('show');
             document.getElementById('results').classList.remove('show');
 
-            // Simulate processing
-            setTimeout(() => {
-                const plan = createPlan(guests, budget, vibe, dietary, alcohol);
+            // Create the plan after delay
+            setTimeout(function() {
+                var plan = createPlan(guests, budget, vibe, dietary, alcohol);
                 displayPlan(plan);
                 
                 document.getElementById('loading').classList.remove('show');
@@ -1029,11 +321,11 @@
             }, 1500);
         }
 
-        function createPlan(guests, budget, vibe, dietary, alcohol) {
-            const budgetPerPerson = Math.floor(budget / guests);
+        window.createPlan = function(guests, budget, vibe, dietary, alcohol) {
+            var budgetPerPerson = Math.floor(budget / guests);
             
-            // Food recommendations based on scale
-            let food = '';
+            // Food recommendations
+            var food = '';
             if (guests <= 20) {
                 food = 'Artisan cheese boards, charcuterie, gourmet sliders, sushi platters';
             } else if (guests <= 100) {
@@ -1045,7 +337,7 @@
             }
 
             // Music setup
-            let music = '';
+            var music = '';
             if (guests <= 20) {
                 music = 'Curated Spotify playlist + quality Bluetooth speaker';
             } else if (guests <= 100) {
@@ -1057,7 +349,7 @@
             }
 
             // Staffing
-            const staff = {
+            var staff = {
                 bartenders: Math.max(1, Math.ceil(guests / 75)),
                 servers: Math.ceil(guests / 25),
                 security: Math.ceil(guests / 100),
@@ -1078,89 +370,102 @@
             };
         }
 
-        function displayPlan(plan) {
-            let html = `
-                <div class="result-section">
-                    <h3>📊 Overview</h3>
-                    <p><strong>Guests:</strong> ${plan.guests.toLocaleString()}</p>
-                    <p><strong>Budget:</strong> $${plan.budget.toLocaleString()} ($${plan.budgetPerPerson}/person)</p>
-                    <p><strong>Vibe:</strong> ${plan.vibe.toUpperCase()}</p>
-                    <p><strong>Theme:</strong> ${plan.theme.replace('-', ' ').toUpperCase()}</p>
-                </div>
-
-                <div class="result-section">
-                    <h3>🍕 Food & Catering</h3>
-                    <p>${plan.food}</p>
-                    ${plan.dietary ? `<p><strong>Dietary Notes:</strong> ${plan.dietary}</p>` : ''}
-                </div>
-
-                <div class="result-section">
-                    <h3>🍹 Drinks</h3>
-                    <p><strong>Bar Type:</strong> ${plan.alcohol.replace('-', ' ').toUpperCase()}</p>
-                    <p><strong>Estimated Quantities:</strong> ${Math.ceil(plan.guests * 3)} drinks, ${plan.guests * 2} waters</p>
-                </div>
-
-                <div class="result-section">
-                    <h3>🎵 Music & Entertainment</h3>
-                    <p>${plan.music}</p>
-                </div>
-
-                <div class="result-section">
-                    <h3>👥 Staffing Needs</h3>
-                    <p><strong>Bartenders:</strong> ${plan.staff.bartenders}</p>
-                    <p><strong>Servers:</strong> ${plan.staff.servers}</p>
-                    <p><strong>Security:</strong> ${plan.staff.security}</p>
-                    <p><strong>Cleanup Crew:</strong> ${plan.staff.cleanup}</p>
-                </div>
-            `;
+        window.displayPlan = function(plan) {
+            var html = '<div class="result-section">' +
+                '<h3>📊 Overview</h3>' +
+                '<p><strong>Guests:</strong> ' + plan.guests.toLocaleString() + '</p>' +
+                '<p><strong>Budget:</strong> $' + plan.budget.toLocaleString() + ' ($' + plan.budgetPerPerson.toLocaleString() + '/person)</p>' +
+                '<p><strong>Vibe:</strong> ' + plan.vibe.toUpperCase() + '</p>' +
+                '<p><strong>Theme:</strong> ' + plan.theme.replace('-', ' ').toUpperCase() + '</p>' +
+                '</div>' +
+                '<div class="result-section">' +
+                '<h3>🍕 Food & Catering</h3>' +
+                '<p>' + plan.food + '</p>' +
+                (plan.dietary ? '<p><strong>Dietary Notes:</strong> ' + plan.dietary + '</p>' : '') +
+                '</div>' +
+                '<div class="result-section">' +
+                '<h3>🍹 Drinks</h3>' +
+                '<p><strong>Bar Type:</strong> ' + plan.alcohol.replace('-', ' ').toUpperCase() + '</p>' +
+                '<p><strong>Estimated Quantities:</strong> ' + Math.ceil(plan.guests * 3) + ' drinks, ' + plan.guests * 2 + ' waters</p>' +
+                '</div>' +
+                '<div class="result-section">' +
+                '<h3>🎵 Music & Entertainment</h3>' +
+                '<p>' + plan.music + '</p>' +
+                '</div>' +
+                '<div class="result-section">' +
+                '<h3>👥 Staffing Needs</h3>' +
+                '<p><strong>Bartenders:</strong> ' + plan.staff.bartenders + '</p>' +
+                '<p><strong>Servers:</strong> ' + plan.staff.servers + '</p>' +
+                '<p><strong>Security:</strong> ' + plan.staff.security + '</p>' +
+                '<p><strong>Cleanup Crew:</strong> ' + plan.staff.cleanup + '</p>' +
+                '</div>';
 
             document.getElementById('results-content').innerHTML = html;
         }
 
-        function randomizePlan() {
-            // Randomize all inputs
+        window.randomizePlan = function() {
             document.getElementById('guests').value = Math.floor(Math.random() * 9999) + 1;
             document.getElementById('budget').value = Math.floor(Math.random() * 99900) + 100;
             document.getElementById('vibe').selectedIndex = Math.floor(Math.random() * 5);
             document.getElementById('alcohol').selectedIndex = Math.floor(Math.random() * 6);
             
-            // Update displays
-            document.getElementById('guests').oninput();
-            document.getElementById('budget').oninput();
+            updateGuestSlider();
+            updateBudgetSlider();
             
-            // Random theme
-            const themes = document.querySelectorAll('.theme-btn');
-            themes.forEach(b => b.classList.remove('selected'));
-            const randomTheme = themes[Math.floor(Math.random() * themes.length)];
+            var themes = document.querySelectorAll('.theme-btn');
+            themes.forEach(function(b) { b.classList.remove('selected'); });
+            var randomTheme = themes[Math.floor(Math.random() * themes.length)];
             randomTheme.classList.add('selected');
             selectedTheme = randomTheme.dataset.theme;
             
-            // Generate
             generatePlan();
         }
 
-        function panicMode() {
-            const guests = parseInt(document.getElementById('guests').value);
+        window.panicMode = function() {
+            var guests = parseInt(document.getElementById('guests').value);
             
-            let html = `
-                <div class="result-section" style="border-color: #FF0000; background: rgba(255,0,0,0.1);">
-                    <h3>🚨 PANIC MODE - 5 MINUTE PARTY PLAN!</h3>
-                    <p><strong>FOOD (2 min):</strong> Order ${Math.ceil(guests/3)} pizzas NOW! Grab all chips and candy!</p>
-                    <p><strong>DRINKS (1 min):</strong> Ice everything! Text everyone to BYOB!</p>
-                    <p><strong>MUSIC (30 sec):</strong> Spotify "Today's Top Hits" at MAX volume!</p>
-                    <p><strong>SPACE (1 min):</strong> Hide mess in closets! Push furniture to walls!</p>
-                    <p><strong>VIBE (30 sec):</strong> Dim lights! Light candles! Text "PARTY NOW!"</p>
-                    <p style="margin-top: 20px; font-size: 1.2rem; color: #FFEA00;"><strong>GO TIME! IT'S HAPPENING!</strong></p>
-                </div>
-            `;
+            var html = '<div class="result-section" style="border-color: #FF0000; background: rgba(255,0,0,0.1);">' +
+                '<h3>🚨 PANIC MODE - 5 MINUTE PARTY PLAN!</h3>' +
+                '<p><strong>FOOD (2 min):</strong> Order ' + Math.ceil(guests/3) + ' pizzas NOW! Grab all chips and candy!</p>' +
+                '<p><strong>DRINKS (1 min):</strong> Ice everything! Text everyone to BYOB!</p>' +
+                '<p><strong>MUSIC (30 sec):</strong> Spotify "Today\'s Top Hits" at MAX volume!</p>' +
+                '<p><strong>SPACE (1 min):</strong> Hide mess in closets! Push furniture to walls!</p>' +
+                '<p><strong>VIBE (30 sec):</strong> Dim lights! Light candles! Text "PARTY NOW!"</p>' +
+                '<p style="margin-top: 20px; font-size: 1.2rem; color: #FFEA00;"><strong>GO TIME! IT\'S HAPPENING!</strong></p>' +
+                '</div>';
             
             document.getElementById('results-content').innerHTML = html;
             document.getElementById('results').classList.add('show');
         }
 
-        // Test on load
-        console.log('When It Happens loaded successfully!');
-        console.log('Try clicking Generate Party Plan button');
+        // Set up event listeners when page loads
+        window.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded, setting up event listeners...');
+            
+            // Slider events
+            document.getElementById('guests').addEventListener('input', updateGuestSlider);
+            document.getElementById('budget').addEventListener('input', updateBudgetSlider);
+            
+            // Button events
+            document.getElementById('generateBtn').addEventListener('click', generatePlan);
+            document.getElementById('randomBtn').addEventListener('click', randomizePlan);
+            document.getElementById('panicBtn').addEventListener('click', panicMode);
+            
+            // Theme selection
+            document.querySelectorAll('.theme-btn').forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.theme-btn').forEach(function(b) {
+                        b.classList.remove('selected');
+                    });
+                    this.classList.add('selected');
+                    selectedTheme = this.dataset.theme;
+                });
+            });
+            
+            console.log('All event listeners attached!');
+        });
+
+        console.log('Script loaded successfully!');
     </script>
 </body>
 </html>
