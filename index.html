@@ -1,18 +1,9 @@
-    </script>
-</body>
-</html><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WHEN IT HAPPENS - Spontaneous Party Planner</title>
-    <meta name="description" content="Plan the perfect party for 1 to 10,000 people in seconds. From intimate gatherings to massive festivals.">
-    <meta property="og:title" content="WHEN IT HAPPENS - Instant Party Planning">
-    <meta property="og:description" content="Generate complete party plans with food, drinks, music, and more. Scale from 1 to 10,000 guests instantly.">
-    
-    <!-- Supabase -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    
+    <title>WHEN IT HAPPENS - Party Planner</title>
     <style>
         * {
             margin: 0;
@@ -20,408 +11,256 @@
             box-sizing: border-box;
         }
 
-        :root {
-            --neon-pink: #FF006E;
-            --neon-blue: #00F5FF;
-            --neon-green: #00FF88;
-            --neon-yellow: #FFEA00;
-            --dark-bg: #0A0A0A;
-            --card-bg: #1A1A1A;
-            --text-light: #FFFFFF;
-            --text-dim: #888;
-        }
-
         body {
-            font-family: 'Arial', sans-serif;
+            font-family: Arial, sans-serif;
             background: linear-gradient(135deg, #0A0A0A 0%, #1A0A2E 100%);
-            color: var(--text-light);
+            color: white;
             min-height: 100vh;
-            overflow-x: hidden;
-        }
-
-        .glow-text {
-            text-shadow: 0 0 20px currentColor, 0 0 40px currentColor;
-            animation: pulse 2s ease-in-out infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.8; }
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-
-        @keyframes slideIn {
-            from { 
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        header {
-            text-align: center;
-            padding: 3rem 1rem;
-            background: radial-gradient(circle at center, rgba(255,0,110,0.1) 0%, transparent 70%);
+            padding: 20px;
         }
 
         h1 {
-            font-size: clamp(2.5rem, 5vw, 4rem);
-            font-weight: 900;
-            letter-spacing: 0.05em;
-            background: linear-gradient(90deg, var(--neon-pink), var(--neon-blue), var(--neon-green));
+            text-align: center;
+            font-size: 3rem;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #FF006E, #00F5FF, #00FF88);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            margin-bottom: 0.5rem;
-            animation: float 3s ease-in-out infinite;
         }
 
         .tagline {
-            color: var(--text-dim);
-            font-size: 1.2rem;
-            font-style: italic;
+            text-align: center;
+            color: #888;
+            margin-bottom: 30px;
         }
 
         .container {
-            max-width: 1400px;
+            max-width: 1200px;
             margin: 0 auto;
-            padding: 2rem;
         }
 
-        .input-section {
+        .input-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-bottom: 3rem;
-            animation: slideIn 0.6s ease-out;
+            gap: 20px;
+            margin-bottom: 30px;
         }
 
         .input-card {
-            background: var(--card-bg);
+            background: rgba(26, 26, 26, 0.9);
             border: 1px solid rgba(255,255,255,0.1);
             border-radius: 15px;
-            padding: 1.5rem;
-            backdrop-filter: blur(10px);
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .input-card::before {
-            content: '';
-            position: absolute;
-            top: -2px;
-            left: -2px;
-            right: -2px;
-            bottom: -2px;
-            background: linear-gradient(45deg, var(--neon-pink), var(--neon-blue), var(--neon-green));
-            border-radius: 15px;
-            opacity: 0;
-            z-index: -1;
-            transition: opacity 0.3s ease;
-        }
-
-        .input-card:hover::before {
-            opacity: 0.3;
-        }
-
-        .input-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 40px rgba(255,0,110,0.3);
+            padding: 20px;
         }
 
         label {
             display: block;
-            margin-bottom: 0.5rem;
-            color: var(--neon-blue);
-            font-weight: 600;
+            margin-bottom: 10px;
+            color: #00F5FF;
+            font-weight: bold;
             text-transform: uppercase;
             font-size: 0.9rem;
-            letter-spacing: 0.05em;
         }
 
-        input, select, textarea {
+        input[type="range"] {
             width: 100%;
-            padding: 0.8rem;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 8px;
-            color: var(--text-light);
-            font-size: 1rem;
-            transition: all 0.3s ease;
-        }
-
-        input:focus, select:focus, textarea:focus {
-            outline: none;
-            border-color: var(--neon-pink);
-            box-shadow: 0 0 15px rgba(255,0,110,0.3);
-            background: rgba(255,255,255,0.08);
-        }
-
-        .slider-container {
-            margin-top: 0.5rem;
-        }
-
-        .slider {
-            width: 100%;
+            margin-bottom: 10px;
+            -webkit-appearance: none;
             height: 6px;
             background: rgba(255,255,255,0.1);
             border-radius: 3px;
             outline: none;
-            -webkit-appearance: none;
         }
 
-        .slider::-webkit-slider-thumb {
+        input[type="range"]::-webkit-slider-thumb {
             -webkit-appearance: none;
             appearance: none;
             width: 20px;
             height: 20px;
-            background: var(--neon-pink);
+            background: #FF006E;
             border-radius: 50%;
             cursor: pointer;
-            box-shadow: 0 0 10px var(--neon-pink);
         }
 
-        .slider::-moz-range-thumb {
+        input[type="range"]::-moz-range-thumb {
             width: 20px;
             height: 20px;
-            background: var(--neon-pink);
+            background: #FF006E;
             border-radius: 50%;
             cursor: pointer;
-            box-shadow: 0 0 10px var(--neon-pink);
+        }
+
+        select, textarea {
+            width: 100%;
+            padding: 10px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 8px;
+            color: white;
+            font-size: 1rem;
         }
 
         .slider-value {
             text-align: center;
-            margin-top: 0.5rem;
+            color: #FFEA00;
             font-size: 1.2rem;
-            color: var(--neon-yellow);
             font-weight: bold;
         }
 
-        .theme-selector {
+        .theme-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            gap: 0.5rem;
-            margin-top: 0.5rem;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
         }
 
-        .theme-option {
-            padding: 0.8rem;
-            background: rgba(255,255,255,0.05);
+        .theme-btn {
+            padding: 10px;
+            background: rgba(255,255,255,0.1);
             border: 1px solid rgba(255,255,255,0.2);
             border-radius: 8px;
+            color: white;
             cursor: pointer;
-            transition: all 0.3s ease;
-            text-align: center;
-            font-size: 0.9rem;
+            transition: all 0.3s;
         }
 
-        .theme-option:hover {
-            background: rgba(255,0,110,0.2);
-            border-color: var(--neon-pink);
+        .theme-btn:hover {
+            background: rgba(255,0,110,0.3);
             transform: scale(1.05);
         }
 
-        .theme-option.selected {
-            background: var(--neon-pink);
-            color: var(--dark-bg);
+        .theme-btn.selected {
+            background: #FF006E;
             font-weight: bold;
-            box-shadow: 0 0 20px var(--neon-pink);
         }
 
         .action-buttons {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            margin: 3rem 0;
-            flex-wrap: wrap;
+            text-align: center;
+            margin: 30px 0;
         }
 
         .btn {
-            padding: 1rem 2rem;
+            padding: 15px 30px;
+            margin: 0 10px;
             font-size: 1.1rem;
             font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
             border: none;
             border-radius: 50px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
+            text-transform: uppercase;
         }
 
         .btn-primary {
-            background: linear-gradient(45deg, var(--neon-pink), var(--neon-blue));
-            color: var(--text-light);
-            box-shadow: 0 4px 20px rgba(255,0,110,0.4);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 6px 30px rgba(255,0,110,0.6);
+            background: linear-gradient(45deg, #FF006E, #00F5FF);
+            color: white;
         }
 
         .btn-secondary {
             background: transparent;
-            color: var(--neon-green);
-            border: 2px solid var(--neon-green);
-            box-shadow: 0 0 10px rgba(0,255,136,0.3);
-        }
-
-        .btn-secondary:hover {
-            background: var(--neon-green);
-            color: var(--dark-bg);
-            box-shadow: 0 0 20px var(--neon-green);
+            color: #00FF88;
+            border: 2px solid #00FF88;
         }
 
         .btn-danger {
             background: transparent;
-            color: var(--neon-yellow);
-            border: 2px solid var(--neon-yellow);
-            box-shadow: 0 0 10px rgba(255,234,0,0.3);
+            color: #FFEA00;
+            border: 2px solid #FFEA00;
         }
 
-        .btn-danger:hover {
-            background: var(--neon-yellow);
-            color: var(--dark-bg);
-            box-shadow: 0 0 20px var(--neon-yellow);
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(255,255,255,0.2);
         }
 
-        .results-section {
+        #results {
             display: none;
-            animation: slideIn 0.6s ease-out;
-        }
-
-        .results-section.show {
-            display: block;
-        }
-
-        .result-tabs {
-            display: flex;
-            gap: 0.5rem;
-            margin-bottom: 2rem;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-
-        .tab {
-            padding: 0.8rem 1.5rem;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 25px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 600;
-            text-transform: uppercase;
-            font-size: 0.9rem;
-        }
-
-        .tab:hover {
-            background: rgba(255,255,255,0.1);
-            transform: translateY(-2px);
-        }
-
-        .tab.active {
-            background: var(--neon-pink);
-            color: var(--dark-bg);
-            box-shadow: 0 0 20px var(--neon-pink);
-        }
-
-        .result-content {
-            background: var(--card-bg);
-            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(26, 26, 26, 0.9);
             border-radius: 15px;
-            padding: 2rem;
-            min-height: 400px;
-            backdrop-filter: blur(10px);
+            padding: 30px;
+            margin-top: 30px;
         }
 
-        .result-panel {
-            display: none;
-        }
-
-        .result-panel.active {
+        #results.show {
             display: block;
-            animation: slideIn 0.4s ease-out;
         }
 
-        .result-panel h3 {
-            color: var(--neon-blue);
-            margin-bottom: 1.5rem;
-            font-size: 1.8rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .result-item {
+        .result-section {
+            margin-bottom: 20px;
+            padding: 15px;
             background: rgba(255,255,255,0.05);
-            border-left: 3px solid var(--neon-pink);
-            padding: 1rem;
-            margin-bottom: 1rem;
+            border-left: 3px solid #FF006E;
             border-radius: 8px;
-            transition: all 0.3s ease;
+            cursor: pointer;
+            transition: all 0.3s;
         }
 
-        .result-item:hover {
+        .result-section:hover {
             background: rgba(255,255,255,0.08);
             transform: translateX(5px);
         }
 
-        .result-item h4 {
-            color: var(--neon-green);
-            margin-bottom: 0.5rem;
+        .result-section h3 {
+            color: #00F5FF;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        .stat-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-            margin-bottom: 2rem;
+        .expand-icon {
+            font-size: 0.8rem;
+            color: #888;
         }
 
-        .stat-card {
-            background: rgba(255,0,110,0.1);
-            border: 1px solid var(--neon-pink);
-            border-radius: 10px;
-            padding: 1.5rem;
-            text-align: center;
+        .detail-content {
+            display: none;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255,255,255,0.1);
         }
 
-        .stat-value {
-            font-size: 2rem;
+        .detail-content.show {
+            display: block;
+        }
+
+        .food-item {
+            background: rgba(0,255,136,0.1);
+            border: 1px solid rgba(0,255,136,0.3);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 10px;
+        }
+
+        .food-item h4 {
+            color: #00FF88;
+            margin-bottom: 5px;
+        }
+
+        .price-tag {
+            color: #FFEA00;
             font-weight: bold;
-            color: var(--neon-yellow);
-            margin-bottom: 0.5rem;
         }
 
-        .stat-label {
-            color: var(--text-dim);
-            text-transform: uppercase;
+        .order-btn {
+            background: #00FF88;
+            color: #000;
+            border: none;
+            padding: 5px 15px;
+            border-radius: 20px;
+            cursor: pointer;
             font-size: 0.9rem;
+            margin-top: 5px;
         }
 
-        .panic-mode {
-            background: linear-gradient(135deg, rgba(255,0,0,0.2), rgba(255,100,0,0.2));
-            border: 2px solid #FF4444;
-            border-radius: 15px;
-            padding: 1.5rem;
-            margin-top: 2rem;
-            animation: pulse 1s ease-in-out infinite;
+        .order-btn:hover {
+            background: #00FF88;
+            transform: scale(1.05);
         }
 
         .loading {
             display: none;
             text-align: center;
-            padding: 3rem;
+            padding: 30px;
         }
 
         .loading.show {
@@ -429,140 +268,36 @@
         }
 
         .spinner {
-            width: 60px;
-            height: 60px;
+            width: 50px;
+            height: 50px;
             border: 3px solid rgba(255,255,255,0.1);
-            border-top: 3px solid var(--neon-pink);
+            border-top: 3px solid #FF006E;
             border-radius: 50%;
             animation: spin 1s linear infinite;
-            margin: 0 auto 1rem;
+            margin: 0 auto;
         }
 
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-
-        .export-buttons {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            margin-top: 2rem;
-            flex-wrap: wrap;
-        }
-
-        .mood-indicator {
-            width: 100%;
-            height: 4px;
-            background: linear-gradient(90deg, 
-                var(--neon-blue) 0%, 
-                var(--neon-green) 33%, 
-                var(--neon-yellow) 66%, 
-                var(--neon-pink) 100%);
-            border-radius: 2px;
-            margin-top: 1rem;
-            opacity: 0.7;
-        }
-
-        .share-modal {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: var(--card-bg);
-            border: 2px solid var(--neon-pink);
-            border-radius: 15px;
-            padding: 2rem;
-            z-index: 1000;
-            max-width: 500px;
-            width: 90%;
-            box-shadow: 0 0 50px rgba(255,0,110,0.5);
-        }
-
-        .share-modal.show {
-            display: block;
-            animation: slideIn 0.3s ease-out;
-        }
-
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.8);
-            z-index: 999;
-        }
-
-        .modal-overlay.show {
-            display: block;
-        }
-
-        .share-link-input {
-            width: 100%;
-            padding: 1rem;
-            background: rgba(255,255,255,0.1);
-            border: 1px solid var(--neon-blue);
-            border-radius: 8px;
-            color: var(--text-light);
-            font-size: 1.1rem;
-            margin: 1rem 0;
-            text-align: center;
-        }
-
-        .copy-success {
-            color: var(--neon-green);
-            text-align: center;
-            margin-top: 0.5rem;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .copy-success.show {
-            opacity: 1;
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                padding: 1rem;
-            }
-            
-            .input-section {
-                grid-template-columns: 1fr;
-            }
-            
-            h1 {
-                font-size: 2rem;
-            }
-        }
-
-        @media print {
-            body { background: white; color: black; }
-            .action-buttons, .export-buttons, .input-section { display: none; }
-            .result-tabs { display: none; }
-            .result-panel { display: block !important; page-break-after: always; }
-        }
     </style>
 </head>
 <body>
-    <header>
-        <h1 class="glow-text">WHEN IT HAPPENS</h1>
-        <p class="tagline">From Solo Dance Party to Stadium Rave in 3 Clicks</p>
-    </header>
+    <h1>WHEN IT HAPPENS</h1>
+    <p class="tagline">From Solo Dance Party to Stadium Rave in 3 Clicks</p>
 
     <div class="container">
-        <div class="input-section">
+        <div class="input-grid">
             <div class="input-card">
                 <label for="guests">Guest Count</label>
-                <input type="range" id="guests" class="slider" min="1" max="10000" value="50">
+                <input type="range" id="guests" min="1" max="10000" value="50">
                 <div class="slider-value" id="guests-value">50 people</div>
             </div>
 
             <div class="input-card">
                 <label for="budget">Budget</label>
-                <input type="range" id="budget" class="slider" min="100" max="1000000" value="5000" step="100">
+                <input type="range" id="budget" min="100" max="1000000" value="5000" step="100">
                 <div class="slider-value" id="budget-value">$5,000</div>
             </div>
 
@@ -575,27 +310,26 @@
                     <option value="wild">Wild Night</option>
                     <option value="epic">Epic Rager</option>
                 </select>
-                <div class="mood-indicator"></div>
             </div>
 
             <div class="input-card">
                 <label>Theme</label>
-                <div class="theme-selector">
-                    <div class="theme-option" data-theme="neon-noir">Neon Noir</div>
-                    <div class="theme-option" data-theme="desert-mirage">Desert Mirage</div>
-                    <div class="theme-option" data-theme="garden-glam">Garden Glam</div>
-                    <div class="theme-option" data-theme="cyber-punk">Cyber Punk</div>
-                    <div class="theme-option" data-theme="vintage-vegas">Vintage Vegas</div>
-                    <div class="theme-option" data-theme="tropical-disco">Tropical Disco</div>
-                    <div class="theme-option" data-theme="patriotic">Patriotic</div>
-                    <div class="theme-option" data-theme="anti-fascist">Anti-Fascist</div>
-                    <div class="theme-option" data-theme="we-made-it">We Made It</div>
+                <div class="theme-grid" id="theme-grid">
+                    <button class="theme-btn" data-theme="neon-noir">Neon Noir</button>
+                    <button class="theme-btn" data-theme="desert-mirage">Desert Mirage</button>
+                    <button class="theme-btn" data-theme="garden-glam">Garden Glam</button>
+                    <button class="theme-btn" data-theme="cyber-punk">Cyber Punk</button>
+                    <button class="theme-btn" data-theme="vintage-vegas">Vintage Vegas</button>
+                    <button class="theme-btn" data-theme="tropical-disco">Tropical Disco</button>
+                    <button class="theme-btn" data-theme="patriotic">Patriotic</button>
+                    <button class="theme-btn" data-theme="anti-fascist">Anti-Fascist</button>
+                    <button class="theme-btn" data-theme="we-made-it">We Made It</button>
                 </div>
             </div>
 
             <div class="input-card">
                 <label for="dietary">Dietary Restrictions</label>
-                <textarea id="dietary" rows="3" placeholder="Vegetarian, Vegan, Gluten-free, Kosher, Halal, Allergies..."></textarea>
+                <textarea id="dietary" rows="3" placeholder="Vegetarian, Vegan, Gluten-free..."></textarea>
             </div>
 
             <div class="input-card">
@@ -606,25 +340,14 @@
                     <option value="standard" selected>Standard Bar</option>
                     <option value="premium">Premium Selection</option>
                     <option value="craft">Craft Cocktails</option>
-                    <option value="unlimited">Open Bar Everything</option>
                 </select>
             </div>
         </div>
 
         <div class="action-buttons">
-            <button class="btn btn-primary" id="generateBtn">
-                🎉 GENERATE PARTY PLAN
-            </button>
-            <button class="btn btn-secondary" id="randomBtn">
-                🎲 SURPRISE ME
-            </button>
-            <button class="btn btn-danger" id="panicBtn">
-                ⚡ PANIC MODE (5 MIN PARTY)
-            </button>
-        </div>
-        
-        <div style="text-align: center; margin: 1rem 0; color: #888; font-size: 0.9rem;">
-            <span id="save-status">✅ Your party plan auto-saves locally</span>
+            <button class="btn btn-primary" onclick="generatePlan()">🎉 GENERATE PARTY PLAN</button>
+            <button class="btn btn-secondary" onclick="randomizePlan()">🎲 SURPRISE ME</button>
+            <button class="btn btn-danger" onclick="panicMode()">⚡ PANIC MODE</button>
         </div>
 
         <div class="loading" id="loading">
@@ -632,886 +355,812 @@
             <p>Creating your perfect party...</p>
         </div>
 
-        <div class="results-section" id="results">
-            <div class="result-tabs" id="resultTabs">
-                <div class="tab active" data-tab="overview">Overview</div>
-                <div class="tab" data-tab="food">Food</div>
-                <div class="tab" data-tab="drinks">Drinks</div>
-                <div class="tab" data-tab="decor">Décor</div>
-                <div class="tab" data-tab="music">Music</div>
-                <div class="tab" data-tab="staffing">Staffing</div>
-                <div class="tab" data-tab="safety">Safety</div>
-                <div class="tab" data-tab="timeline">Timeline</div>
-                <div class="tab" data-tab="upgrades">Upgrades</div>
-            </div>
-
-            <div class="result-content">
-                <div class="result-panel active" id="overview-panel">
-                    <h3>Party Overview</h3>
-                    <div class="stat-grid" id="overview-stats"></div>
-                    <div id="overview-details"></div>
-                </div>
-
-                <div class="result-panel" id="food-panel">
-                    <h3>Food Menu</h3>
-                    <div id="food-content"></div>
-                </div>
-
-                <div class="result-panel" id="drinks-panel">
-                    <h3>Drink Menu</h3>
-                    <div id="drinks-content"></div>
-                </div>
-
-                <div class="result-panel" id="decor-panel">
-                    <h3>Décor & Ambiance</h3>
-                    <div id="decor-content"></div>
-                </div>
-
-                <div class="result-panel" id="music-panel">
-                    <h3>Music & Entertainment</h3>
-                    <div id="music-content"></div>
-                </div>
-
-                <div class="result-panel" id="staffing-panel">
-                    <h3>Staffing Requirements</h3>
-                    <div id="staffing-content"></div>
-                </div>
-
-                <div class="result-panel" id="safety-panel">
-                    <h3>Safety & Permits</h3>
-                    <div id="safety-content"></div>
-                </div>
-
-                <div class="result-panel" id="timeline-panel">
-                    <h3>Event Timeline</h3>
-                    <div id="timeline-content"></div>
-                </div>
-
-                <div class="result-panel" id="upgrades-panel">
-                    <h3>Hard-Partier Upgrades</h3>
-                    <div id="upgrades-content"></div>
-                </div>
-            </div>
-
-            <div class="export-buttons">
-                <button class="btn btn-secondary" id="exportExcelBtn">📊 Export to Excel</button>
-                <button class="btn btn-secondary" id="exportPDFBtn">📄 Export to PDF</button>
-                <button class="btn btn-primary" id="shareBtn">🔗 Share Party Plan</button>
-            </div>
+        <div id="results">
+            <h2 style="text-align: center; margin-bottom: 20px;">YOUR PARTY PLAN</h2>
+            <div id="results-content"></div>
         </div>
-    </div>
-
-    <!-- Share Modal -->
-    <div class="modal-overlay" id="modalOverlay"></div>
-    <div class="share-modal" id="shareModal">
-        <h3 style="color: var(--neon-pink); margin-bottom: 1rem;">🎉 Share Your Party Plan!</h3>
-        <p style="color: var(--text-dim); margin-bottom: 1rem;">Anyone with this link can view your party plan:</p>
-        <input type="text" class="share-link-input" id="shareLink" readonly>
-        <div style="display: flex; gap: 1rem; margin-top: 1rem;">
-            <button class="btn btn-primary" id="copyLinkBtn" style="flex: 1;">📋 Copy Link</button>
-            <button class="btn btn-secondary" id="closeModalBtn" style="flex: 1;">Close</button>
-        </div>
-        <div class="copy-success" id="copySuccess">✅ Link copied to clipboard!</div>
     </div>
 
     <script>
-        // ============================================
-        // Supabase Configuration - WHEN IT HAPPENS
-        // ============================================
-        const SUPABASE_URL = 'https://nkistpdkqawfmrqbqvgq.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5raXN0cGRrcWF3Zm1ycWJxdmdxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY3MDA3OTUsImV4cCI6MjA3MjI3Njc5NX0.V74270m0lv_5DEUWIQKt8wKT99NFixryBFaAKYdnkVY';
-        
-        // Initialize Supabase client
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        // Simple, direct JavaScript - no complicated event listeners
+        let selectedTheme = 'neon-noir';
 
-        // Party Planning Data
-        const partyData = {
-            themes: {
-                'neon-noir': {
-                    colors: ['#FF006E', '#00F5FF', '#000000'],
-                    decor: ['LED strips', 'Black lights', 'Neon signs', 'Mirror balls', 'Smoke machines'],
-                    flowers: ['Black roses', 'Purple orchids', 'Blue hydrangeas'],
-                    linens: ['Black velvet', 'Metallic silver', 'Holographic fabric']
-                },
-                'desert-mirage': {
-                    colors: ['#FF6B35', '#F7931E', '#FCEE21'],
-                    decor: ['Cacti', 'Sand art', 'Moroccan lanterns', 'Rugs', 'Copper accents'],
-                    flowers: ['Succulents', 'Air plants', 'Dried palms', 'Proteas'],
-                    linens: ['Terracotta', 'Sand linen', 'Burnt orange']
-                },
-                'garden-glam': {
-                    colors: ['#98D982', '#FFD700', '#FFC0CB'],
-                    decor: ['Fairy lights', 'Floral arches', 'Vintage furniture', 'Crystal chandeliers'],
-                    flowers: ['Roses', 'Peonies', 'Eucalyptus', 'Baby\'s breath'],
-                    linens: ['Blush pink', 'Sage green', 'Ivory lace']
-                },
-                'cyber-punk': {
-                    colors: ['#00FFFF', '#FF00FF', '#1A1A1A'],
-                    decor: ['Holographic panels', 'LED matrices', 'Circuit board art', 'Laser projectors'],
-                    flowers: ['LED roses', 'Metallic sprayed ferns', 'Neon painted succulents'],
-                    linens: ['Metallic mesh', 'Reflective mylar', 'Black leather']
-                },
-                'vintage-vegas': {
-                    colors: ['#FFD700', '#FF0000', '#000000'],
-                    decor: ['Casino tables', 'Vintage marquee lights', 'Red velvet ropes', 'Gold sequins'],
-                    flowers: ['Red roses', 'White orchids', 'Gold painted leaves'],
-                    linens: ['Red velvet', 'Gold lamé', 'Black satin']
-                },
-                'tropical-disco': {
-                    colors: ['#FF1493', '#00CED1', '#FFE4B5'],
-                    decor: ['Palm fronds', 'Disco balls', 'Tiki torches', 'Neon flamingos'],
-                    flowers: ['Birds of paradise', 'Hibiscus', 'Monstera leaves', 'Orchids'],
-                    linens: ['Hot pink', 'Turquoise', 'Sunset orange']
-                },
-                'patriotic': {
-                    colors: ['#FF0000', '#FFFFFF', '#0000FF'],
-                    decor: ['Flag bunting', 'Sparklers', 'Star projections', 'Firework displays', 'Eagle ice sculptures'],
-                    flowers: ['Red roses', 'White carnations', 'Blue delphiniums', 'Star-spangled arrangements'],
-                    linens: ['Navy blue', 'Crisp white', 'Cherry red', 'Stars and stripes patterns']
-                },
-                'anti-fascist': {
-                    colors: ['#000000', '#FF0000', '#FFFFFF'],
-                    decor: ['Protest banners', 'Unity symbols', 'Rainbow flags', 'Power fist sculptures', 'Liberation art'],
-                    flowers: ['Red carnations', 'Black dahlias', 'White lilies', 'Wildflower bouquets'],
-                    linens: ['Black canvas', 'Revolutionary red', 'Solidarity prints']
-                },
-                'we-made-it': {
-                    colors: ['#FFD700', '#C0C0C0', '#CD7F32'],
-                    decor: ['Trophy displays', 'Champagne towers', 'Gold balloons', 'Achievement banners', 'Success timeline'],
-                    flowers: ['Golden roses', 'White orchids', 'Champagne peonies', 'Victory wreaths'],
-                    linens: ['Champagne silk', 'Gold satin', 'Pearl white', 'Metallic bronze']
-                }
-            },
+        // Update slider displays with proper comma formatting
+        document.getElementById('guests').oninput = function() {
+            let val = parseInt(this.value);
+            let display = '';
             
-            foodMenus: {
-                small: [ // 1-20 people
-                    { name: 'Artisan Cheese Board', servings: '2-3 per person', cost: 15 },
-                    { name: 'Charcuterie Selection', servings: '3oz per person', cost: 18 },
-                    { name: 'Gourmet Sliders', servings: '3 per person', cost: 12 },
-                    { name: 'Sushi Platter', servings: '8 pieces per person', cost: 25 },
-                    { name: 'Mediterranean Mezze', servings: '1 platter per 5', cost: 60 }
-                ],
-                medium: [ // 21-100 people
-                    { name: 'Taco Bar', servings: '3 tacos per person', cost: 18 },
-                    { name: 'Pizza Station', servings: '3 slices per person', cost: 12 },
-                    { name: 'BBQ Buffet', servings: '1lb per person', cost: 22 },
-                    { name: 'Pasta Bar', servings: '2 servings per person', cost: 16 },
-                    { name: 'Asian Fusion Station', servings: 'Mixed plates', cost: 20 }
-                ],
-                large: [ // 101-1000 people
-                    { name: 'Food Trucks (3)', servings: 'Continuous service', cost: 25 },
-                    { name: 'Buffet Stations (5)', servings: 'Multiple options', cost: 35 },
-                    { name: 'Catering Team Service', servings: 'Full meal', cost: 45 },
-                    { name: 'Street Food Festival', servings: '6 vendors', cost: 30 }
-                ],
-                massive: [ // 1000+ people
-                    { name: 'Festival Food Court', servings: '10+ vendors', cost: 40 },
-                    { name: 'Multiple Catering Teams', servings: 'Zones', cost: 50 },
-                    { name: 'Concert-Style Concessions', servings: '20 stations', cost: 35 }
-                ]
-            },
-            
-            drinkMenus: {
-                none: [],
-                'beer-wine': [
-                    { name: 'House Red Wine', brand: 'Barefoot', amount: '5oz pour' },
-                    { name: 'House White Wine', brand: 'Yellow Tail', amount: '5oz pour' },
-                    { name: 'Domestic Beer', brand: 'Budweiser/Coors', amount: '12oz' },
-                    { name: 'Craft Beer', brand: 'Local Selection', amount: '12oz' }
-                ],
-                standard: [
-                    { name: 'Vodka', brand: 'Tito\'s', amount: '1.5oz pour' },
-                    { name: 'Rum', brand: 'Bacardi', amount: '1.5oz pour' },
-                    { name: 'Whiskey', brand: 'Jack Daniels', amount: '1.5oz pour' },
-                    { name: 'Gin', brand: 'Bombay', amount: '1.5oz pour' },
-                    { name: 'Tequila', brand: 'Jose Cuervo', amount: '1.5oz pour' }
-                ],
-                premium: [
-                    { name: 'Vodka', brand: 'Grey Goose', amount: '1.5oz pour' },
-                    { name: 'Rum', brand: 'Ron Zacapa', amount: '1.5oz pour' },
-                    { name: 'Whiskey', brand: 'Macallan 12', amount: '1.5oz pour' },
-                    { name: 'Gin', brand: 'Hendricks', amount: '1.5oz pour' },
-                    { name: 'Tequila', brand: 'Don Julio 1942', amount: '1.5oz pour' }
-                ],
-                craft: [
-                    { name: 'Neon Dream', recipe: 'Vodka, Blue Curacao, Lime, Edible Glitter' },
-                    { name: 'Desert Sunset', recipe: 'Mezcal, Aperol, Pineapple, Tajin Rim' },
-                    { name: 'Garden Party', recipe: 'Gin, Elderflower, Cucumber, Basil' },
-                    { name: 'Smoke & Mirrors', recipe: 'Whiskey, Amaretto, Smoked Cherry' },
-                    { name: 'Tropical Thunder', recipe: 'Rum Blend, Passion Fruit, Coconut Foam' }
-                ]
-            },
-            
-            staffingRatios: {
-                bartenders: 75, // 1 per 75 guests
-                servers: 25, // 1 per 25 guests
-                security: 100, // 1 per 100 guests
-                medics: 500, // 1 per 500 guests
-                coordinators: 200, // 1 per 200 guests
-                cleanup: 50 // 1 per 50 guests
+            if (val == 1) {
+                display = '1 person';
+            } else if (val >= 1000000000) {
+                display = (val/1000000000).toFixed(1) + 'B people';
+            } else if (val >= 1000000) {
+                display = (val/1000000).toFixed(1) + 'M people';
+            } else if (val >= 1000) {
+                display = (val/1000).toFixed(1) + 'K people';
+            } else {
+                display = val.toLocaleString() + ' people';
             }
+            
+            document.getElementById('guests-value').textContent = display;
         };
 
-        let currentPartyPlan = null;
-        let selectedTheme = null;
-
-        // Event Listeners Setup
-        document.addEventListener('DOMContentLoaded', function() {
-            // Slider listeners
-            document.getElementById('guests').addEventListener('input', function() {
-                updateSliderValue('guests', this.value);
-            });
+        document.getElementById('budget').oninput = function() {
+            let val = parseInt(this.value);
+            let display = '';
             
-            document.getElementById('budget').addEventListener('input', function() {
-                updateSliderValue('budget', this.value);
-            });
+            if (val >= 1000000000) {
+                display = '
 
-            // Button listeners
-            document.getElementById('generateBtn').addEventListener('click', generatePlan);
-            document.getElementById('randomBtn').addEventListener('click', randomizePlan);
-            document.getElementById('panicBtn').addEventListener('click', panicMode);
-            document.getElementById('exportExcelBtn').addEventListener('click', exportToExcel);
-            document.getElementById('exportPDFBtn').addEventListener('click', exportToPDF);
-            document.getElementById('shareBtn').addEventListener('click', shareParty);
-            
-            // Modal listeners
-            document.getElementById('modalOverlay').addEventListener('click', closeShareModal);
-            document.getElementById('copyLinkBtn').addEventListener('click', copyShareLink);
-            document.getElementById('closeModalBtn').addEventListener('click', closeShareModal);
-
-            // Tab listeners
-            document.querySelectorAll('.tab').forEach(tab => {
-                tab.addEventListener('click', function() {
-                    switchTab(this.dataset.tab);
-                });
-            });
-
-            // Theme selection
-            document.querySelectorAll('.theme-option').forEach(option => {
-                option.addEventListener('click', function() {
-                    document.querySelectorAll('.theme-option').forEach(o => o.classList.remove('selected'));
-                    this.classList.add('selected');
-                    selectedTheme = this.dataset.theme;
-                    saveState();
-                });
-            });
-
-            // Save state on input changes
-            document.getElementById('guests').addEventListener('change', saveState);
-            document.getElementById('budget').addEventListener('change', saveState);
-            document.getElementById('vibe').addEventListener('change', saveState);
-            document.getElementById('dietary').addEventListener('input', saveState);
-            document.getElementById('alcohol').addEventListener('change', saveState);
-
-            // Load saved state on page load
-            loadSavedState();
+        // Theme selection
+        document.querySelectorAll('.theme-btn').forEach(btn => {
+            btn.onclick = function() {
+                document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('selected'));
+                this.classList.add('selected');
+                selectedTheme = this.dataset.theme;
+            };
         });
 
-        async function loadSavedState() {
-            // Check if there's a party ID in the URL
-            const urlParams = new URLSearchParams(window.location.search);
-            const partyId = urlParams.get('party');
-            
-            if (partyId && supabase) {
-                await loadSharedParty(partyId);
-            } else {
-                // Load from local storage
-                const savedState = localStorage.getItem('partyPlannerState');
-                if (savedState) {
-                    const state = JSON.parse(savedState);
-                    document.getElementById('guests').value = state.guests || 50;
-                    document.getElementById('budget').value = state.budget || 5000;
-                    document.getElementById('vibe').value = state.vibe || 'lively';
-                    document.getElementById('dietary').value = state.dietary || '';
-                    document.getElementById('alcohol').value = state.alcohol || 'standard';
-                    
-                    updateSliderValue('guests', state.guests || 50);
-                    updateSliderValue('budget', state.budget || 5000);
-                    
-                    if (state.theme) {
-                        selectedTheme = state.theme;
-                        document.querySelector(`[data-theme="${state.theme}"]`)?.classList.add('selected');
-                    }
-                    
-                    if (state.lastPlan) {
-                        currentPartyPlan = state.lastPlan;
-                        displayResults(currentPartyPlan);
-                    }
-                }
-            }
-        }
-
-        async function loadSharedParty(partyId) {
-            try {
-                showLoading();
-                
-                const { data, error } = await supabase
-                    .from('parties')
-                    .select('*')
-                    .eq('share_url', partyId)
-                    .single();
-                
-                if (error) throw error;
-                
-                if (data) {
-                    await supabase
-                        .from('parties')
-                        .update({ view_count: data.view_count + 1 })
-                        .eq('id', data.id);
-                    
-                    document.getElementById('guests').value = data.guest_count;
-                    document.getElementById('budget').value = data.budget;
-                    document.getElementById('vibe').value = data.vibe;
-                    document.getElementById('dietary').value = data.dietary_restrictions || '';
-                    document.getElementById('alcohol').value = data.alcohol_preference;
-                    
-                    updateSliderValue('guests', data.guest_count);
-                    updateSliderValue('budget', data.budget);
-                    
-                    selectedTheme = data.theme;
-                    document.querySelectorAll('.theme-option').forEach(o => o.classList.remove('selected'));
-                    document.querySelector(`[data-theme="${data.theme}"]`)?.classList.add('selected');
-                    
-                    currentPartyPlan = data.party_plan;
-                    displayResults(currentPartyPlan);
-                    
-                    document.getElementById('save-status').textContent = `📥 Loaded shared party plan (viewed ${data.view_count + 1} times)`;
-                }
-                
-                hideLoading();
-            } catch (error) {
-                console.error('Error loading shared party:', error);
-                document.getElementById('save-status').textContent = '❌ Could not load shared party';
-                hideLoading();
-            }
-        }
-
-        function saveState() {
-            const state = {
-                guests: document.getElementById('guests').value,
-                budget: document.getElementById('budget').value,
-                vibe: document.getElementById('vibe').value,
-                dietary: document.getElementById('dietary').value,
-                alcohol: document.getElementById('alcohol').value,
-                theme: selectedTheme,
-                lastPlan: currentPartyPlan,
-                savedAt: new Date().toISOString()
-            };
-            localStorage.setItem('partyPlannerState', JSON.stringify(state));
-        }
-
-        function updateSliderValue(type, value) {
-            if (type === 'guests') {
-                let display = value + ' people';
-                if (value == 1) display = '1 person';
-                else if (value >= 1000) display = (value/1000).toFixed(1) + 'k people';
-                document.getElementById('guests-value').textContent = display;
-            } else if (type === 'budget') {
-                let display = '$' + parseInt(value).toLocaleString();
-                if (value >= 1000000) display = '$' + (value/1000000).toFixed(1) + 'M';
-                document.getElementById('budget-value').textContent = display;
-            }
-        }
-
+        // Main generate function
         function generatePlan() {
+            console.log('Generating party plan...');
+            
             const guests = parseInt(document.getElementById('guests').value);
             const budget = parseInt(document.getElementById('budget').value);
             const vibe = document.getElementById('vibe').value;
             const dietary = document.getElementById('dietary').value;
             const alcohol = document.getElementById('alcohol').value;
-            
-            if (!selectedTheme) {
-                selectedTheme = 'neon-noir';
-                document.querySelector('[data-theme="neon-noir"]').classList.add('selected');
-            }
-            
-            showLoading();
-            
+
+            // Show loading
+            document.getElementById('loading').classList.add('show');
+            document.getElementById('results').classList.remove('show');
+
+            // Simulate processing
             setTimeout(() => {
-                currentPartyPlan = createPartyPlan(guests, budget, vibe, selectedTheme, dietary, alcohol);
-                displayResults(currentPartyPlan);
-                saveState();
-                hideLoading();
+                const plan = createPlan(guests, budget, vibe, dietary, alcohol);
+                displayPlan(plan);
+                
+                document.getElementById('loading').classList.remove('show');
+                document.getElementById('results').classList.add('show');
             }, 1500);
         }
 
-        function createPartyPlan(guests, budget, vibe, theme, dietary, alcohol) {
-            const plan = {
+        function createPlan(guests, budget, vibe, dietary, alcohol) {
+            const budgetPerPerson = Math.floor(budget / guests);
+            
+            // Detailed food recommendations based on scale
+            let foodItems = [];
+            let foodSummary = '';
+            
+            if (guests <= 20) {
+                foodSummary = 'Artisan cheese boards, charcuterie, gourmet sliders, sushi platters';
+                foodItems = [
+                    { name: 'Artisan Cheese Board', quantity: Math.ceil(guests/5), unitPrice: 75, description: 'Selection of 5 premium cheeses, crackers, fruits', servings: '5 people per board' },
+                    { name: 'Charcuterie Platter', quantity: Math.ceil(guests/5), unitPrice: 85, description: 'Cured meats, olives, nuts, spreads', servings: '5 people per platter' },
+                    { name: 'Gourmet Slider Trio', quantity: Math.ceil(guests/2), unitPrice: 24, description: 'Beef, chicken, veggie options', servings: '2 people per set' },
+                    { name: 'Sushi Platter (48pc)', quantity: Math.ceil(guests/8), unitPrice: 120, description: 'California, spicy tuna, salmon rolls', servings: '8 people per platter' },
+                    { name: 'Mediterranean Mezze', quantity: Math.ceil(guests/10), unitPrice: 95, description: 'Hummus, falafel, pita, tzatziki', servings: '10 people per spread' }
+                ];
+            } else if (guests <= 100) {
+                foodSummary = 'Taco bar, pizza station, BBQ buffet, pasta bar';
+                foodItems = [
+                    { name: 'Taco Bar Setup', quantity: 1, unitPrice: guests * 18, description: 'Build-your-own tacos with all fixings', servings: `${guests} people` },
+                    { name: 'Pizza Party Package', quantity: Math.ceil(guests/8), unitPrice: 120, description: 'Assorted pizzas - 8 large pies', servings: '8 people per package' },
+                    { name: 'BBQ Buffet', quantity: 1, unitPrice: guests * 22, description: 'Brisket, pulled pork, sides', servings: `${guests} people` },
+                    { name: 'Pasta Station', quantity: 1, unitPrice: guests * 16, description: '3 pasta types, 4 sauces, salad', servings: `${guests} people` },
+                    { name: 'Asian Fusion Station', quantity: 1, unitPrice: guests * 20, description: 'Stir-fry, spring rolls, dumplings', servings: `${guests} people` }
+                ];
+            } else if (guests <= 1000) {
+                foodSummary = '3 food trucks, multiple buffet stations, catering teams';
+                foodItems = [
+                    { name: 'Food Truck #1 - Tacos', quantity: 4, unitPrice: 2500, description: '4-hour service, unlimited tacos', servings: '250 people per hour' },
+                    { name: 'Food Truck #2 - BBQ', quantity: 4, unitPrice: 3000, description: '4-hour service, full BBQ menu', servings: '250 people per hour' },
+                    { name: 'Food Truck #3 - Desserts', quantity: 4, unitPrice: 2000, description: '4-hour service, ice cream & sweets', servings: '250 people per hour' },
+                    { name: 'Buffet Stations (5)', quantity: 1, unitPrice: guests * 35, description: 'International cuisine stations', servings: `${guests} people` },
+                    { name: 'Catering Staff Team', quantity: Math.ceil(guests/50), unitPrice: 500, description: 'Professional service staff', servings: '50 guests per staff' }
+                ];
+            } else {
+                foodSummary = 'Festival food court with 10+ vendors, multiple catering zones';
+                foodItems = [
+                    { name: 'Food Vendor Package A', quantity: 5, unitPrice: 5000, description: 'Tacos, burgers, pizza, BBQ, Asian', servings: '200 people/hour each' },
+                    { name: 'Food Vendor Package B', quantity: 5, unitPrice: 5000, description: 'Vegan, desserts, coffee, smoothies, ice cream', servings: '200 people/hour each' },
+                    { name: 'VIP Catering Zone', quantity: 1, unitPrice: 25000, description: 'Premium buffet for VIP area', servings: '500 VIP guests' },
+                    { name: 'Hydration Stations', quantity: 10, unitPrice: 500, description: 'Water, sports drinks, cooling zones', servings: '1000 people each' },
+                    { name: 'Festival Staff Catering', quantity: 1, unitPrice: 10000, description: 'Feed your crew and volunteers', servings: 'All staff' }
+                ];
+            }
+
+            // Calculate total food cost
+            let totalFoodCost = 0;
+            foodItems.forEach(item => {
+                item.totalPrice = item.quantity * item.unitPrice;
+                totalFoodCost += item.totalPrice;
+            });
+
+            // Music setup
+            let music = '';
+            if (guests <= 20) {
+                music = 'Curated Spotify playlist + quality Bluetooth speaker';
+            } else if (guests <= 100) {
+                music = 'Professional DJ with sound system';
+            } else if (guests <= 1000) {
+                music = 'Live band + DJ, professional stage and lighting';
+            } else {
+                music = 'Multiple stages, headline acts, full festival production';
+            }
+
+            // Staffing
+            const staff = {
+                bartenders: Math.max(1, Math.ceil(guests / 75)),
+                servers: Math.ceil(guests / 25),
+                security: Math.ceil(guests / 100),
+                cleanup: Math.ceil(guests / 50)
+            };
+
+            return {
                 guests: guests,
                 budget: budget,
+                budgetPerPerson: budgetPerPerson,
                 vibe: vibe,
-                theme: theme,
+                theme: selectedTheme,
                 dietary: dietary,
                 alcohol: alcohol,
-                budgetPerPerson: Math.floor(budget / guests)
+                foodSummary: foodSummary,
+                foodItems: foodItems,
+                totalFoodCost: totalFoodCost,
+                music: music,
+                staff: staff
             };
-            
-            // Select appropriate food menu
-            if (guests <= 20) {
-                plan.foodMenu = partyData.foodMenus.small;
-            } else if (guests <= 100) {
-                plan.foodMenu = partyData.foodMenus.medium;
-            } else if (guests <= 1000) {
-                plan.foodMenu = partyData.foodMenus.large;
-            } else {
-                plan.foodMenu = partyData.foodMenus.massive;
-            }
-            
-            plan.foodBudget = Math.floor(budget * 0.35);
-            plan.foodItems = plan.foodMenu.map(item => ({
-                ...item,
-                quantity: Math.ceil(guests * (item.cost / 20)),
-                totalCost: Math.ceil(guests * item.cost)
-            }));
-            
-            plan.drinkMenu = partyData.drinkMenus[alcohol] || [];
-            plan.drinkBudget = Math.floor(budget * 0.25);
-            
-            if (plan.drinkMenu.length > 0) {
-                const drinksPerPerson = vibe === 'epic' ? 6 : vibe === 'wild' ? 5 : 3;
-                plan.drinkQuantities = {
-                    total: guests * drinksPerPerson,
-                    water: guests * 4,
-                    soda: guests * 2,
-                    alcohol: guests * drinksPerPerson * 0.7
-                };
-            }
-            
-            plan.themeDetails = partyData.themes[theme];
-            plan.decorBudget = Math.floor(budget * 0.15);
-            
-            plan.staff = {
-                bartenders: Math.max(1, Math.ceil(guests / partyData.staffingRatios.bartenders)),
-                servers: Math.ceil(guests / partyData.staffingRatios.servers),
-                security: Math.ceil(guests / partyData.staffingRatios.security),
-                medics: guests >= 500 ? Math.ceil(guests / partyData.staffingRatios.medics) : 0,
-                coordinators: Math.ceil(guests / partyData.staffingRatios.coordinators),
-                cleanup: Math.ceil(guests / partyData.staffingRatios.cleanup)
-            };
-            
-            // Music setup
-            if (guests <= 20) {
-                plan.music = {
-                    type: 'Curated Playlist + Bluetooth Speaker',
-                    cost: 100,
-                    details: 'Spotify Premium playlist, JBL PartyBox'
-                };
-            } else if (guests <= 100) {
-                plan.music = {
-                    type: 'DJ + Sound System',
-                    cost: 1500,
-                    details: 'Professional DJ, 2 speakers, mixing board'
-                };
-            } else if (guests <= 1000) {
-                plan.music = {
-                    type: 'Live Band + DJ',
-                    cost: 5000,
-                    details: 'Main stage, professional sound, lighting rig'
-                };
-            } else {
-                plan.music = {
-                    type: 'Festival Setup',
-                    cost: 25000,
-                    details: 'Multiple stages, headliner acts, full production'
-                };
-            }
-            
-            // Safety and permits
-            plan.safety = [];
-            if (guests > 50) plan.safety.push('Event Insurance Policy');
-            if (guests > 100) plan.safety.push('Noise Permit');
-            if (alcohol !== 'none') plan.safety.push('Liquor License');
-            if (guests > 500) plan.safety.push('Fire Marshal Approval');
-            if (guests > 1000) plan.safety.push('Police Coordination');
-            if (vibe === 'epic') plan.safety.push('Pyrotechnic Permit');
-            
-            plan.timeline = createTimeline(vibe, guests);
-            
-            plan.upgrades = [];
-            if (vibe === 'wild' || vibe === 'epic') {
-                plan.upgrades.push('Laser Light Show - $2,000');
-                plan.upgrades.push('Fog Machine Array - $500');
-                plan.upgrades.push('VIP Bottle Service Area - $5,000');
-                if (guests > 100) plan.upgrades.push('Pyrotechnics Display - $3,000');
-                if (guests > 500) plan.upgrades.push('LED Wristbands Sync Show - $10,000');
-            }
-            
-            return plan;
         }
 
-        function createTimeline(vibe, guests) {
-            const timeline = [];
-            if (vibe === 'chill') {
-                timeline.push('6:00 PM - Soft Opening, Background Music');
-                timeline.push('7:00 PM - Main Event Begins');
-                timeline.push('9:00 PM - Peak Socializing');
-                timeline.push('11:00 PM - Wind Down');
-            } else if (vibe === 'epic') {
-                timeline.push('8:00 PM - Doors Open, Opening DJ');
-                timeline.push('10:00 PM - Main Act/Peak Party');
-                timeline.push('12:00 AM - Headliner Performance');
-                timeline.push('2:00 AM - After Party Begins');
-                timeline.push('4:00 AM - Sunrise Set');
-            } else {
-                timeline.push('7:00 PM - Arrival & Welcome Drinks');
-                timeline.push('8:00 PM - Party Kicks Off');
-                timeline.push('10:00 PM - Peak Energy');
-                timeline.push('12:00 AM - Late Night Vibes');
-            }
-            return timeline;
-        }
-
-        function displayResults(plan) {
-            // Overview
-            document.getElementById('overview-stats').innerHTML = `
-                <div class="stat-card">
-                    <div class="stat-value">${plan.guests.toLocaleString()}</div>
-                    <div class="stat-label">Guests</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value">$${plan.budget.toLocaleString()}</div>
-                    <div class="stat-label">Total Budget</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value">$${plan.budgetPerPerson}</div>
-                    <div class="stat-label">Per Person</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value">${plan.vibe.toUpperCase()}</div>
-                    <div class="stat-label">Vibe Level</div>
-                </div>
-            `;
-            
-            document.getElementById('overview-details').innerHTML = `
-                <div class="result-item">
-                    <h4>Theme: ${plan.theme.replace('-', ' ').toUpperCase()}</h4>
-                    <p>Color Palette: ${plan.themeDetails.colors.join(', ')}</p>
-                    <p>Key Décor: ${plan.themeDetails.decor.slice(0, 3).join(', ')}</p>
-                </div>
-            `;
-            
-            // Food
-            let foodHTML = '';
+        function displayPlan(plan) {
+            // Create food details HTML
+            let foodDetailsHTML = '';
             plan.foodItems.forEach(item => {
-                foodHTML += `
-                    <div class="result-item">
+                foodDetailsHTML += `
+                    <div class="food-item">
                         <h4>${item.name}</h4>
-                        <p>Serving: ${item.servings}</p>
-                        <p>Quantity Needed: ${item.quantity} units</p>
-                        <p>Estimated Cost: $${item.totalCost.toLocaleString()}</p>
+                        <p><strong>Quantity:</strong> ${item.quantity.toLocaleString()} ${item.quantity > 1 ? 'units' : 'unit'}</p>
+                        <p><strong>Description:</strong> ${item.description}</p>
+                        <p><strong>Serves:</strong> ${item.servings}</p>
+                        <p class="price-tag">Unit Price: ${item.unitPrice.toLocaleString()}</p>
+                        <p class="price-tag">Total: ${item.totalPrice.toLocaleString()}</p>
+                        <button class="order-btn" onclick="alert('One-click ordering coming soon! Partner: ${item.name}')">
+                            📦 Quick Order
+                        </button>
                     </div>
                 `;
             });
-            if (plan.dietary) {
-                foodHTML += `
-                    <div class="result-item">
-                        <h4>Dietary Accommodations</h4>
-                        <p>${plan.dietary}</p>
+
+            let html = `
+                <div class="result-section" onclick="toggleSection('overview')">
+                    <h3>📊 Overview <span class="expand-icon">▼</span></h3>
+                    <div id="overview-details" class="detail-content show">
+                        <p><strong>Guests:</strong> ${plan.guests.toLocaleString()}</p>
+                        <p><strong>Budget:</strong> ${plan.budget.toLocaleString()} (${plan.budgetPerPerson.toLocaleString()}/person)</p>
+                        <p><strong>Vibe:</strong> ${plan.vibe.toUpperCase()}</p>
+                        <p><strong>Theme:</strong> ${plan.theme.replace('-', ' ').toUpperCase()}</p>
                     </div>
-                `;
-            }
-            document.getElementById('food-content').innerHTML = foodHTML;
-            
-            // Drinks
-            let drinksHTML = '';
-            if (plan.drinkMenu.length > 0) {
-                plan.drinkMenu.forEach(drink => {
-                    drinksHTML += `
-                        <div class="result-item">
-                            <h4>${drink.name}</h4>
-                            <p>Brand: ${drink.brand || 'House Special'}</p>
-                            <p>${drink.recipe || 'Serving: ' + drink.amount}</p>
-                        </div>
-                    `;
-                });
-                
-                if (plan.drinkQuantities) {
-                    drinksHTML += `
-                        <div class="result-item">
-                            <h4>Quantities Needed</h4>
-                            <p>Alcoholic Drinks: ${Math.ceil(plan.drinkQuantities.alcohol)} servings</p>
-                            <p>Water Bottles: ${plan.drinkQuantities.water}</p>
-                            <p>Soft Drinks: ${plan.drinkQuantities.soda}</p>
-                        </div>
-                    `;
-                }
-            } else {
-                drinksHTML = '<div class="result-item"><p>Non-alcoholic event - Focus on mocktails, sodas, and water</p></div>';
-            }
-            document.getElementById('drinks-content').innerHTML = drinksHTML;
-            
-            // Decor
-            let decorHTML = `
-                <div class="result-item">
-                    <h4>Color Scheme</h4>
-                    <p>${plan.themeDetails.colors.map(color => 
-                        `<span style="display:inline-block;width:30px;height:30px;background:${color};border-radius:50%;margin-right:10px;vertical-align:middle;"></span>`
-                    ).join('')}</p>
                 </div>
-                <div class="result-item">
-                    <h4>Floral Arrangements</h4>
-                    <p>${plan.themeDetails.flowers.join(', ')}</p>
+
+                <div class="result-section" onclick="toggleSection('food')">
+                    <h3>🍕 Food & Catering <span class="expand-icon">Click to expand</span></h3>
+                    <p>${plan.foodSummary}</p>
+                    <p class="price-tag">Total Food Budget: ${plan.totalFoodCost.toLocaleString()}</p>
+                    ${plan.dietary ? `<p><strong>Dietary Notes:</strong> ${plan.dietary}</p>` : ''}
+                    <div id="food-details" class="detail-content">
+                        <h4 style="color: #00FF88; margin-bottom: 15px;">Detailed Food Order:</h4>
+                        ${foodDetailsHTML}
+                    </div>
                 </div>
-                <div class="result-item">
-                    <h4>Linens & Fabrics</h4>
-                    <p>${plan.themeDetails.linens.join(', ')}</p>
+
+                <div class="result-section" onclick="toggleSection('drinks')">
+                    <h3>🍹 Drinks <span class="expand-icon">▼</span></h3>
+                    <div id="drinks-details" class="detail-content">
+                        <p><strong>Bar Type:</strong> ${plan.alcohol.replace('-', ' ').toUpperCase()}</p>
+                        <p><strong>Estimated Quantities:</strong></p>
+                        <ul style="margin-left: 20px;">
+                            <li>Alcoholic Drinks: ${(plan.guests * 3).toLocaleString()} servings</li>
+                            <li>Water Bottles: ${(plan.guests * 2).toLocaleString()}</li>
+                            <li>Soft Drinks: ${(plan.guests * 1).toLocaleString()}</li>
+                        </ul>
+                    </div>
                 </div>
-                <div class="result-item">
-                    <h4>Special Effects</h4>
-                    <p>${plan.themeDetails.decor.join(', ')}</p>
+
+                <div class="result-section" onclick="toggleSection('music')">
+                    <h3>🎵 Music & Entertainment <span class="expand-icon">▼</span></h3>
+                    <div id="music-details" class="detail-content">
+                        <p>${plan.music}</p>
+                    </div>
+                </div>
+
+                <div class="result-section" onclick="toggleSection('staffing')">
+                    <h3>👥 Staffing Needs <span class="expand-icon">▼</span></h3>
+                    <div id="staffing-details" class="detail-content">
+                        <p><strong>Bartenders:</strong> ${plan.staff.bartenders.toLocaleString()}</p>
+                        <p><strong>Servers:</strong> ${plan.staff.servers.toLocaleString()}</p>
+                        <p><strong>Security:</strong> ${plan.staff.security.toLocaleString()}</p>
+                        <p><strong>Cleanup Crew:</strong> ${plan.staff.cleanup.toLocaleString()}</p>
+                        <p><strong>Total Staff:</strong> ${(plan.staff.bartenders + plan.staff.servers + plan.staff.security + plan.staff.cleanup).toLocaleString()} people</p>
+                    </div>
                 </div>
             `;
-            document.getElementById('decor-content').innerHTML = decorHTML;
-            
-            // Music
-            document.getElementById('music-content').innerHTML = `
-                <div class="result-item">
-                    <h4>${plan.music.type}</h4>
-                    <p>${plan.music.details}</p>
-                    <p>Estimated Cost: $${plan.music.cost.toLocaleString()}</p>
-                </div>
-            `;
-            
-            // Staffing
-            let staffHTML = '';
-            for (let [role, count] of Object.entries(plan.staff)) {
-                if (count > 0) {
-                    staffHTML += `
-                        <div class="result-item">
-                            <h4>${role.charAt(0).toUpperCase() + role.slice(1)}</h4>
-                            <p>Required: ${count} ${count === 1 ? 'person' : 'people'}</p>
-                        </div>
-                    `;
-                }
-            }
-            document.getElementById('staffing-content').innerHTML = staffHTML;
-            
-            // Safety
-            let safetyHTML = '';
-            plan.safety.forEach(item => {
-                safetyHTML += `
-                    <div class="result-item">
-                        <h4>${item}</h4>
-                        <p>Required for event of this scale and type</p>
-                    </div>
-                `;
-            });
-            document.getElementById('safety-content').innerHTML = safetyHTML || '<p>Small event - basic safety measures sufficient</p>';
-            
-            // Timeline
-            let timelineHTML = '';
-            plan.timeline.forEach(item => {
-                timelineHTML += `
-                    <div class="result-item">
-                        <p>${item}</p>
-                    </div>
-                `;
-            });
-            document.getElementById('timeline-content').innerHTML = timelineHTML;
-            
-            // Upgrades
-            let upgradesHTML = '';
-            if (plan.upgrades.length > 0) {
-                plan.upgrades.forEach(item => {
-                    upgradesHTML += `
-                        <div class="result-item">
-                            <h4>${item}</h4>
-                        </div>
-                    `;
-                });
-            } else {
-                upgradesHTML = '<p>Your vibe is more chill - consider upgrading to "Wild" or "Epic" for extreme party options!</p>';
-            }
-            document.getElementById('upgrades-content').innerHTML = upgradesHTML;
-            
-            document.getElementById('results').classList.add('show');
+
+            document.getElementById('results-content').innerHTML = html;
         }
 
-        function switchTab(tabName) {
-            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
-            document.querySelectorAll('.result-panel').forEach(panel => panel.classList.remove('active'));
-            
-            document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
-            document.getElementById(tabName + '-panel').classList.add('active');
+        function toggleSection(section) {
+            event.stopPropagation();
+            const details = document.getElementById(section + '-details');
+            if (details) {
+                details.classList.toggle('show');
+                // Update expand icon
+                const icon = event.currentTarget.querySelector('.expand-icon');
+                if (icon) {
+                    icon.textContent = details.classList.contains('show') ? '▲' : '▼';
+                }
+            }
         }
 
         function randomizePlan() {
-            const randomGuests = Math.floor(Math.random() * 9999) + 1;
-            const randomBudget = Math.floor(Math.random() * 99900) + 100;
-            const vibes = ['chill', 'casual', 'lively', 'wild', 'epic'];
-            const randomVibe = vibes[Math.floor(Math.random() * vibes.length)];
-            const themes = Object.keys(partyData.themes);
+            // Randomize all inputs
+            document.getElementById('guests').value = Math.floor(Math.random() * 9999) + 1;
+            document.getElementById('budget').value = Math.floor(Math.random() * 99900) + 100;
+            document.getElementById('vibe').selectedIndex = Math.floor(Math.random() * 5);
+            document.getElementById('alcohol').selectedIndex = Math.floor(Math.random() * 6);
+            
+            // Update displays
+            document.getElementById('guests').oninput();
+            document.getElementById('budget').oninput();
+            
+            // Random theme
+            const themes = document.querySelectorAll('.theme-btn');
+            themes.forEach(b => b.classList.remove('selected'));
             const randomTheme = themes[Math.floor(Math.random() * themes.length)];
-            const alcoholOptions = ['none', 'beer-wine', 'standard', 'premium', 'craft', 'unlimited'];
-            const randomAlcohol = alcoholOptions[Math.floor(Math.random() * alcoholOptions.length)];
+            randomTheme.classList.add('selected');
+            selectedTheme = randomTheme.dataset.theme;
             
-            document.getElementById('guests').value = randomGuests;
-            updateSliderValue('guests', randomGuests);
-            document.getElementById('budget').value = randomBudget;
-            updateSliderValue('budget', randomBudget);
-            document.getElementById('vibe').value = randomVibe;
-            document.getElementById('alcohol').value = randomAlcohol;
-            
-            document.querySelectorAll('.theme-option').forEach(o => o.classList.remove('selected'));
-            document.querySelector(`[data-theme="${randomTheme}"]`).classList.add('selected');
-            selectedTheme = randomTheme;
-            
+            // Generate
             generatePlan();
         }
 
         function panicMode() {
             const guests = parseInt(document.getElementById('guests').value);
-            const panicPlan = `
-                <div class="panic-mode">
-                    <h3>🚨 PANIC MODE ACTIVATED - 5 MINUTE PARTY PLAN 🚨</h3>
-                    <div class="result-item">
-                        <h4>FOOD - 2 Minutes</h4>
-                        <p>📱 Order pizza NOW (${Math.ceil(guests/3)} large pizzas)</p>
-                        <p>🏃 Send someone to grab chips, dips, and candy</p>
-                        <p>🍿 Start all microwave popcorn you have</p>
-                    </div>
-                    <div class="result-item">
-                        <h4>DRINKS - 1 Minute</h4>
-                        <p>🧊 Fill ALL containers with ice</p>
-                        <p>🥤 Put everything liquid in the fridge</p>
-                        <p>🍺 Text everyone to BYOB</p>
-                    </div>
-                    <div class="result-item">
-                        <h4>VIBE - 1 Minute</h4>
-                        <p>💡 Turn off main lights, use lamps only</p>
-                        <p>🎵 Start "Today's Top Hits" playlist at max volume</p>
-                        <p>🕯️ Light any candles you have</p>
-                    </div>
-                    <div class="result-item">
-                        <h4>SPACE - 1 Minute</h4>
-                        <p>🗑️ Throw everything in closets</p>
-                        <p>🪑 Push furniture against walls</p>
-                        <p>🚽 Put toilet paper in bathroom</p>
-                    </div>
-                    <div class="result-item">
-                        <h4>GO TIME!</h4>
-                        <p>✅ Text "Party starts NOW, come as you are!"</p>
-                        <p>✅ Put on your best outfit</p>
-                        <p>✅ Take a shot and smile - IT'S HAPPENING!</p>
-                    </div>
+            
+            let html = `
+                <div class="result-section" style="border-color: #FF0000; background: rgba(255,0,0,0.1);">
+                    <h3>🚨 PANIC MODE - 5 MINUTE PARTY PLAN!</h3>
+                    <p><strong>FOOD (2 min):</strong> Order ${Math.ceil(guests/3)} pizzas NOW! Grab all chips and candy!</p>
+                    <p><strong>DRINKS (1 min):</strong> Ice everything! Text everyone to BYOB!</p>
+                    <p><strong>MUSIC (30 sec):</strong> Spotify "Today's Top Hits" at MAX volume!</p>
+                    <p><strong>SPACE (1 min):</strong> Hide mess in closets! Push furniture to walls!</p>
+                    <p><strong>VIBE (30 sec):</strong> Dim lights! Light candles! Text "PARTY NOW!"</p>
+                    <p style="margin-top: 20px; font-size: 1.2rem; color: #FFEA00;"><strong>GO TIME! IT'S HAPPENING!</strong></p>
                 </div>
             `;
             
-            document.getElementById('overview-panel').innerHTML = panicPlan;
+            document.getElementById('results-content').innerHTML = html;
             document.getElementById('results').classList.add('show');
-            
-            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
-            document.querySelectorAll('.result-panel').forEach(panel => panel.classList.remove('active'));
-            document.querySelector('.tab').classList.add('active');
-            document.getElementById('overview-panel').classList.add('active');
         }
 
-        function showLoading() {
+        // Test on load
+        console.log('When It Happens loaded successfully!');
+        console.log('Try clicking Generate Party Plan button');
+    </script>
+</body>
+</html> + (val/1000000000).toFixed(1) + 'B';
+            } else if (val >= 1000000) {
+                display = '
+
+        // Theme selection
+        document.querySelectorAll('.theme-btn').forEach(btn => {
+            btn.onclick = function() {
+                document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('selected'));
+                this.classList.add('selected');
+                selectedTheme = this.dataset.theme;
+            };
+        });
+
+        // Main generate function
+        function generatePlan() {
+            console.log('Generating party plan...');
+            
+            const guests = parseInt(document.getElementById('guests').value);
+            const budget = parseInt(document.getElementById('budget').value);
+            const vibe = document.getElementById('vibe').value;
+            const dietary = document.getElementById('dietary').value;
+            const alcohol = document.getElementById('alcohol').value;
+
+            // Show loading
             document.getElementById('loading').classList.add('show');
+            document.getElementById('results').classList.remove('show');
+
+            // Simulate processing
+            setTimeout(() => {
+                const plan = createPlan(guests, budget, vibe, dietary, alcohol);
+                displayPlan(plan);
+                
+                document.getElementById('loading').classList.remove('show');
+                document.getElementById('results').classList.add('show');
+            }, 1500);
         }
 
-        function hideLoading() {
-            document.getElementById('loading').classList.remove('show');
+        function createPlan(guests, budget, vibe, dietary, alcohol) {
+            const budgetPerPerson = Math.floor(budget / guests);
+            
+            // Food recommendations based on scale
+            let food = '';
+            if (guests <= 20) {
+                food = 'Artisan cheese boards, charcuterie, gourmet sliders, sushi platters';
+            } else if (guests <= 100) {
+                food = 'Taco bar, pizza station, BBQ buffet, pasta bar';
+            } else if (guests <= 1000) {
+                food = '3 food trucks, multiple buffet stations, catering teams';
+            } else {
+                food = 'Festival food court with 10+ vendors, multiple catering zones';
+            }
+
+            // Music setup
+            let music = '';
+            if (guests <= 20) {
+                music = 'Curated Spotify playlist + quality Bluetooth speaker';
+            } else if (guests <= 100) {
+                music = 'Professional DJ with sound system';
+            } else if (guests <= 1000) {
+                music = 'Live band + DJ, professional stage and lighting';
+            } else {
+                music = 'Multiple stages, headline acts, full festival production';
+            }
+
+            // Staffing
+            const staff = {
+                bartenders: Math.max(1, Math.ceil(guests / 75)),
+                servers: Math.ceil(guests / 25),
+                security: Math.ceil(guests / 100),
+                cleanup: Math.ceil(guests / 50)
+            };
+
+            return {
+                guests: guests,
+                budget: budget,
+                budgetPerPerson: budgetPerPerson,
+                vibe: vibe,
+                theme: selectedTheme,
+                dietary: dietary,
+                alcohol: alcohol,
+                food: food,
+                music: music,
+                staff: staff
+            };
         }
 
-        function exportToExcel() {
-            if (!currentPartyPlan) {
-                alert('Generate a party plan first!');
-                return;
+        function displayPlan(plan) {
+            let html = `
+                <div class="result-section">
+                    <h3>📊 Overview</h3>
+                    <p><strong>Guests:</strong> ${plan.guests.toLocaleString()}</p>
+                    <p><strong>Budget:</strong> $${plan.budget.toLocaleString()} ($${plan.budgetPerPerson}/person)</p>
+                    <p><strong>Vibe:</strong> ${plan.vibe.toUpperCase()}</p>
+                    <p><strong>Theme:</strong> ${plan.theme.replace('-', ' ').toUpperCase()}</p>
+                </div>
+
+                <div class="result-section">
+                    <h3>🍕 Food & Catering</h3>
+                    <p>${plan.food}</p>
+                    ${plan.dietary ? `<p><strong>Dietary Notes:</strong> ${plan.dietary}</p>` : ''}
+                </div>
+
+                <div class="result-section">
+                    <h3>🍹 Drinks</h3>
+                    <p><strong>Bar Type:</strong> ${plan.alcohol.replace('-', ' ').toUpperCase()}</p>
+                    <p><strong>Estimated Quantities:</strong> ${Math.ceil(plan.guests * 3)} drinks, ${plan.guests * 2} waters</p>
+                </div>
+
+                <div class="result-section">
+                    <h3>🎵 Music & Entertainment</h3>
+                    <p>${plan.music}</p>
+                </div>
+
+                <div class="result-section">
+                    <h3>👥 Staffing Needs</h3>
+                    <p><strong>Bartenders:</strong> ${plan.staff.bartenders}</p>
+                    <p><strong>Servers:</strong> ${plan.staff.servers}</p>
+                    <p><strong>Security:</strong> ${plan.staff.security}</p>
+                    <p><strong>Cleanup Crew:</strong> ${plan.staff.cleanup}</p>
+                </div>
+            `;
+
+            document.getElementById('results-content').innerHTML = html;
+        }
+
+        function randomizePlan() {
+            // Randomize all inputs
+            document.getElementById('guests').value = Math.floor(Math.random() * 9999) + 1;
+            document.getElementById('budget').value = Math.floor(Math.random() * 99900) + 100;
+            document.getElementById('vibe').selectedIndex = Math.floor(Math.random() * 5);
+            document.getElementById('alcohol').selectedIndex = Math.floor(Math.random() * 6);
+            
+            // Update displays
+            document.getElementById('guests').oninput();
+            document.getElementById('budget').oninput();
+            
+            // Random theme
+            const themes = document.querySelectorAll('.theme-btn');
+            themes.forEach(b => b.classList.remove('selected'));
+            const randomTheme = themes[Math.floor(Math.random() * themes.length)];
+            randomTheme.classList.add('selected');
+            selectedTheme = randomTheme.dataset.theme;
+            
+            // Generate
+            generatePlan();
+        }
+
+        function panicMode() {
+            const guests = parseInt(document.getElementById('guests').value);
+            
+            let html = `
+                <div class="result-section" style="border-color: #FF0000; background: rgba(255,0,0,0.1);">
+                    <h3>🚨 PANIC MODE - 5 MINUTE PARTY PLAN!</h3>
+                    <p><strong>FOOD (2 min):</strong> Order ${Math.ceil(guests/3)} pizzas NOW! Grab all chips and candy!</p>
+                    <p><strong>DRINKS (1 min):</strong> Ice everything! Text everyone to BYOB!</p>
+                    <p><strong>MUSIC (30 sec):</strong> Spotify "Today's Top Hits" at MAX volume!</p>
+                    <p><strong>SPACE (1 min):</strong> Hide mess in closets! Push furniture to walls!</p>
+                    <p><strong>VIBE (30 sec):</strong> Dim lights! Light candles! Text "PARTY NOW!"</p>
+                    <p style="margin-top: 20px; font-size: 1.2rem; color: #FFEA00;"><strong>GO TIME! IT'S HAPPENING!</strong></p>
+                </div>
+            `;
+            
+            document.getElementById('results-content').innerHTML = html;
+            document.getElementById('results').classList.add('show');
+        }
+
+        // Test on load
+        console.log('When It Happens loaded successfully!');
+        console.log('Try clicking Generate Party Plan button');
+    </script>
+</body>
+</html> + (val/1000000).toFixed(1) + 'M';
+            } else {
+                display = '
+
+        // Theme selection
+        document.querySelectorAll('.theme-btn').forEach(btn => {
+            btn.onclick = function() {
+                document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('selected'));
+                this.classList.add('selected');
+                selectedTheme = this.dataset.theme;
+            };
+        });
+
+        // Main generate function
+        function generatePlan() {
+            console.log('Generating party plan...');
+            
+            const guests = parseInt(document.getElementById('guests').value);
+            const budget = parseInt(document.getElementById('budget').value);
+            const vibe = document.getElementById('vibe').value;
+            const dietary = document.getElementById('dietary').value;
+            const alcohol = document.getElementById('alcohol').value;
+
+            // Show loading
+            document.getElementById('loading').classList.add('show');
+            document.getElementById('results').classList.remove('show');
+
+            // Simulate processing
+            setTimeout(() => {
+                const plan = createPlan(guests, budget, vibe, dietary, alcohol);
+                displayPlan(plan);
+                
+                document.getElementById('loading').classList.remove('show');
+                document.getElementById('results').classList.add('show');
+            }, 1500);
+        }
+
+        function createPlan(guests, budget, vibe, dietary, alcohol) {
+            const budgetPerPerson = Math.floor(budget / guests);
+            
+            // Food recommendations based on scale
+            let food = '';
+            if (guests <= 20) {
+                food = 'Artisan cheese boards, charcuterie, gourmet sliders, sushi platters';
+            } else if (guests <= 100) {
+                food = 'Taco bar, pizza station, BBQ buffet, pasta bar';
+            } else if (guests <= 1000) {
+                food = '3 food trucks, multiple buffet stations, catering teams';
+            } else {
+                food = 'Festival food court with 10+ vendors, multiple catering zones';
+            }
+
+            // Music setup
+            let music = '';
+            if (guests <= 20) {
+                music = 'Curated Spotify playlist + quality Bluetooth speaker';
+            } else if (guests <= 100) {
+                music = 'Professional DJ with sound system';
+            } else if (guests <= 1000) {
+                music = 'Live band + DJ, professional stage and lighting';
+            } else {
+                music = 'Multiple stages, headline acts, full festival production';
+            }
+
+            // Staffing
+            const staff = {
+                bartenders: Math.max(1, Math.ceil(guests / 75)),
+                servers: Math.ceil(guests / 25),
+                security: Math.ceil(guests / 100),
+                cleanup: Math.ceil(guests / 50)
+            };
+
+            return {
+                guests: guests,
+                budget: budget,
+                budgetPerPerson: budgetPerPerson,
+                vibe: vibe,
+                theme: selectedTheme,
+                dietary: dietary,
+                alcohol: alcohol,
+                food: food,
+                music: music,
+                staff: staff
+            };
+        }
+
+        function displayPlan(plan) {
+            let html = `
+                <div class="result-section">
+                    <h3>📊 Overview</h3>
+                    <p><strong>Guests:</strong> ${plan.guests.toLocaleString()}</p>
+                    <p><strong>Budget:</strong> $${plan.budget.toLocaleString()} ($${plan.budgetPerPerson}/person)</p>
+                    <p><strong>Vibe:</strong> ${plan.vibe.toUpperCase()}</p>
+                    <p><strong>Theme:</strong> ${plan.theme.replace('-', ' ').toUpperCase()}</p>
+                </div>
+
+                <div class="result-section">
+                    <h3>🍕 Food & Catering</h3>
+                    <p>${plan.food}</p>
+                    ${plan.dietary ? `<p><strong>Dietary Notes:</strong> ${plan.dietary}</p>` : ''}
+                </div>
+
+                <div class="result-section">
+                    <h3>🍹 Drinks</h3>
+                    <p><strong>Bar Type:</strong> ${plan.alcohol.replace('-', ' ').toUpperCase()}</p>
+                    <p><strong>Estimated Quantities:</strong> ${Math.ceil(plan.guests * 3)} drinks, ${plan.guests * 2} waters</p>
+                </div>
+
+                <div class="result-section">
+                    <h3>🎵 Music & Entertainment</h3>
+                    <p>${plan.music}</p>
+                </div>
+
+                <div class="result-section">
+                    <h3>👥 Staffing Needs</h3>
+                    <p><strong>Bartenders:</strong> ${plan.staff.bartenders}</p>
+                    <p><strong>Servers:</strong> ${plan.staff.servers}</p>
+                    <p><strong>Security:</strong> ${plan.staff.security}</p>
+                    <p><strong>Cleanup Crew:</strong> ${plan.staff.cleanup}</p>
+                </div>
+            `;
+
+            document.getElementById('results-content').innerHTML = html;
+        }
+
+        function randomizePlan() {
+            // Randomize all inputs
+            document.getElementById('guests').value = Math.floor(Math.random() * 9999) + 1;
+            document.getElementById('budget').value = Math.floor(Math.random() * 99900) + 100;
+            document.getElementById('vibe').selectedIndex = Math.floor(Math.random() * 5);
+            document.getElementById('alcohol').selectedIndex = Math.floor(Math.random() * 6);
+            
+            // Update displays
+            document.getElementById('guests').oninput();
+            document.getElementById('budget').oninput();
+            
+            // Random theme
+            const themes = document.querySelectorAll('.theme-btn');
+            themes.forEach(b => b.classList.remove('selected'));
+            const randomTheme = themes[Math.floor(Math.random() * themes.length)];
+            randomTheme.classList.add('selected');
+            selectedTheme = randomTheme.dataset.theme;
+            
+            // Generate
+            generatePlan();
+        }
+
+        function panicMode() {
+            const guests = parseInt(document.getElementById('guests').value);
+            
+            let html = `
+                <div class="result-section" style="border-color: #FF0000; background: rgba(255,0,0,0.1);">
+                    <h3>🚨 PANIC MODE - 5 MINUTE PARTY PLAN!</h3>
+                    <p><strong>FOOD (2 min):</strong> Order ${Math.ceil(guests/3)} pizzas NOW! Grab all chips and candy!</p>
+                    <p><strong>DRINKS (1 min):</strong> Ice everything! Text everyone to BYOB!</p>
+                    <p><strong>MUSIC (30 sec):</strong> Spotify "Today's Top Hits" at MAX volume!</p>
+                    <p><strong>SPACE (1 min):</strong> Hide mess in closets! Push furniture to walls!</p>
+                    <p><strong>VIBE (30 sec):</strong> Dim lights! Light candles! Text "PARTY NOW!"</p>
+                    <p style="margin-top: 20px; font-size: 1.2rem; color: #FFEA00;"><strong>GO TIME! IT'S HAPPENING!</strong></p>
+                </div>
+            `;
+            
+            document.getElementById('results-content').innerHTML = html;
+            document.getElementById('results').classList.add('show');
+        }
+
+        // Test on load
+        console.log('When It Happens loaded successfully!');
+        console.log('Try clicking Generate Party Plan button');
+    </script>
+</body>
+</html> + val.toLocaleString();
             }
             
-            let csv = 'WHEN IT HAPPENS - Party Plan Export\n\n';
-            csv += `Event Details\n`;
-            csv += `Guests,${currentPartyPlan.guests}\n`;
-            csv += `Budget,$${currentPartyPlan.budget}\n`;
-            csv += `Theme,${currentPartyPlan.theme}\n`;
-            csv += `Vibe,${currentPartyPlan.vibe}\n\n`;
+            document.getElementById('budget-value').textContent = display;
+        };
+
+        // Theme selection
+        document.querySelectorAll('.theme-btn').forEach(btn => {
+            btn.onclick = function() {
+                document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('selected'));
+                this.classList.add('selected');
+                selectedTheme = this.dataset.theme;
+            };
+        });
+
+        // Main generate function
+        function generatePlan() {
+            console.log('Generating party plan...');
             
-            csv += `Food Menu\n`;
-            currentPartyPlan.foodItems.forEach(item => {
-                csv += `${item.name},${item.servings},$${item.totalCost}\n`;
-            });
-            
-            csv += `\nStaffing\n`;
-            for (let [role, count] of Object.entries(currentPartyPlan.staff)) {
-                if (count > 0) csv += `${role},${count}\n`;
-            }
-            
-            const blob = new Blob([csv], { type: 'text/csv' });
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'party-plan.csv';
-            a.click();
+            const guests = parseInt(document.getElementById('guests').value);
+            const budget = parseInt(document.getElementById('budget').value);
+            const vibe = document.getElementById('vibe').value;
+            const dietary = document.getElementById('dietary').value;
+            const alcohol = document.getElementById('alcohol').value;
+
+            // Show loading
+            document.getElementById('loading').classList.add('show');
+            document.getElementById('results').classList.remove('show');
+
+            // Simulate processing
+            setTimeout(() => {
+                const plan = createPlan(guests, budget, vibe, dietary, alcohol);
+                displayPlan(plan);
+                
+                document.getElementById('loading').classList.remove('show');
+                document.getElementById('results').classList.add('show');
+            }, 1500);
         }
 
-        function exportToPDF() {
-            if (!currentPartyPlan) {
-                alert('Generate a party plan first!');
-                return;
-            }
-            window.print();
-        }
-
-        async function shareParty() {
-            if (!currentPartyPlan) {
-                alert('Generate a party plan first!');
-                return;
-            }
+        function createPlan(guests, budget, vibe, dietary, alcohol) {
+            const budgetPerPerson = Math.floor(budget / guests);
             
-            try {
-                showLoading();
-                
-                const shortId = Math.random().toString(36).substring(2, 10);
-                
-                const { data, error } = await supabase
-                    .from('parties')
-                    .insert([{
-                        guest_count: parseInt(document.getElementById('guests').value),
-                        budget: parseInt(document.getElementById('budget').value),
-                        vibe: document.getElementById('vibe').value,
-                        theme: selectedTheme,
-                        dietary_restrictions: document.getElementById('dietary').value,
-                        alcohol_preference: document.getElementById('alcohol').value,
-                        party_plan: currentPartyPlan,
-                        share_url: shortId
-                    }])
-                    .select()
-                    .single();
-                
-                if (error) throw error;
-                
-                const shareUrl = `${window.location.origin}${window.location.pathname}?party=${shortId}`;
-                
-                document.getElementById('shareLink').value = shareUrl;
-                document.getElementById('shareModal').classList.add('show');
-                document.getElementById('modalOverlay').classList.add('show');
-                
-                localStorage.setItem('lastSharedUrl', shareUrl);
-                
-                hideLoading();
-                
-            } catch (error) {
-                console.error('Error sharing party:', error);
-                alert('Could not create share link. Please try again.');
-                hideLoading();
+            // Food recommendations based on scale
+            let food = '';
+            if (guests <= 20) {
+                food = 'Artisan cheese boards, charcuterie, gourmet sliders, sushi platters';
+            } else if (guests <= 100) {
+                food = 'Taco bar, pizza station, BBQ buffet, pasta bar';
+            } else if (guests <= 1000) {
+                food = '3 food trucks, multiple buffet stations, catering teams';
+            } else {
+                food = 'Festival food court with 10+ vendors, multiple catering zones';
             }
+
+            // Music setup
+            let music = '';
+            if (guests <= 20) {
+                music = 'Curated Spotify playlist + quality Bluetooth speaker';
+            } else if (guests <= 100) {
+                music = 'Professional DJ with sound system';
+            } else if (guests <= 1000) {
+                music = 'Live band + DJ, professional stage and lighting';
+            } else {
+                music = 'Multiple stages, headline acts, full festival production';
+            }
+
+            // Staffing
+            const staff = {
+                bartenders: Math.max(1, Math.ceil(guests / 75)),
+                servers: Math.ceil(guests / 25),
+                security: Math.ceil(guests / 100),
+                cleanup: Math.ceil(guests / 50)
+            };
+
+            return {
+                guests: guests,
+                budget: budget,
+                budgetPerPerson: budgetPerPerson,
+                vibe: vibe,
+                theme: selectedTheme,
+                dietary: dietary,
+                alcohol: alcohol,
+                food: food,
+                music: music,
+                staff: staff
+            };
         }
 
-        function copyShareLink() {
-            const shareLink = document.getElementById('shareLink');
-            shareLink.select();
-            shareLink.setSelectionRange(0, 99999);
+        function displayPlan(plan) {
+            let html = `
+                <div class="result-section">
+                    <h3>📊 Overview</h3>
+                    <p><strong>Guests:</strong> ${plan.guests.toLocaleString()}</p>
+                    <p><strong>Budget:</strong> $${plan.budget.toLocaleString()} ($${plan.budgetPerPerson}/person)</p>
+                    <p><strong>Vibe:</strong> ${plan.vibe.toUpperCase()}</p>
+                    <p><strong>Theme:</strong> ${plan.theme.replace('-', ' ').toUpperCase()}</p>
+                </div>
+
+                <div class="result-section">
+                    <h3>🍕 Food & Catering</h3>
+                    <p>${plan.food}</p>
+                    ${plan.dietary ? `<p><strong>Dietary Notes:</strong> ${plan.dietary}</p>` : ''}
+                </div>
+
+                <div class="result-section">
+                    <h3>🍹 Drinks</h3>
+                    <p><strong>Bar Type:</strong> ${plan.alcohol.replace('-', ' ').toUpperCase()}</p>
+                    <p><strong>Estimated Quantities:</strong> ${Math.ceil(plan.guests * 3)} drinks, ${plan.guests * 2} waters</p>
+                </div>
+
+                <div class="result-section">
+                    <h3>🎵 Music & Entertainment</h3>
+                    <p>${plan.music}</p>
+                </div>
+
+                <div class="result-section">
+                    <h3>👥 Staffing Needs</h3>
+                    <p><strong>Bartenders:</strong> ${plan.staff.bartenders}</p>
+                    <p><strong>Servers:</strong> ${plan.staff.servers}</p>
+                    <p><strong>Security:</strong> ${plan.staff.security}</p>
+                    <p><strong>Cleanup Crew:</strong> ${plan.staff.cleanup}</p>
+                </div>
+            `;
+
+            document.getElementById('results-content').innerHTML = html;
+        }
+
+        function randomizePlan() {
+            // Randomize all inputs
+            document.getElementById('guests').value = Math.floor(Math.random() * 9999) + 1;
+            document.getElementById('budget').value = Math.floor(Math.random() * 99900) + 100;
+            document.getElementById('vibe').selectedIndex = Math.floor(Math.random() * 5);
+            document.getElementById('alcohol').selectedIndex = Math.floor(Math.random() * 6);
             
-            navigator.clipboard.writeText(shareLink.value).then(() => {
-                document.getElementById('copySuccess').classList.add('show');
-                setTimeout(() => {
-                    document.getElementById('copySuccess').classList.remove('show');
-                }, 3000);
-            });
+            // Update displays
+            document.getElementById('guests').oninput();
+            document.getElementById('budget').oninput();
+            
+            // Random theme
+            const themes = document.querySelectorAll('.theme-btn');
+            themes.forEach(b => b.classList.remove('selected'));
+            const randomTheme = themes[Math.floor(Math.random() * themes.length)];
+            randomTheme.classList.add('selected');
+            selectedTheme = randomTheme.dataset.theme;
+            
+            // Generate
+            generatePlan();
         }
 
-        function closeShareModal() {
-            document.getElementById('shareModal').classList.remove('show');
-            document.getElementById('modalOverlay').classList.remove('show');
+        function panicMode() {
+            const guests = parseInt(document.getElementById('guests').value);
+            
+            let html = `
+                <div class="result-section" style="border-color: #FF0000; background: rgba(255,0,0,0.1);">
+                    <h3>🚨 PANIC MODE - 5 MINUTE PARTY PLAN!</h3>
+                    <p><strong>FOOD (2 min):</strong> Order ${Math.ceil(guests/3)} pizzas NOW! Grab all chips and candy!</p>
+                    <p><strong>DRINKS (1 min):</strong> Ice everything! Text everyone to BYOB!</p>
+                    <p><strong>MUSIC (30 sec):</strong> Spotify "Today's Top Hits" at MAX volume!</p>
+                    <p><strong>SPACE (1 min):</strong> Hide mess in closets! Push furniture to walls!</p>
+                    <p><strong>VIBE (30 sec):</strong> Dim lights! Light candles! Text "PARTY NOW!"</p>
+                    <p style="margin-top: 20px; font-size: 1.2rem; color: #FFEA00;"><strong>GO TIME! IT'S HAPPENING!</strong></p>
+                </div>
+            `;
+            
+            document.getElementById('results-content').innerHTML = html;
+            document.getElementById('results').classList.add('show');
         }
+
+        // Test on load
+        console.log('When It Happens loaded successfully!');
+        console.log('Try clicking Generate Party Plan button');
+    </script>
+</body>
+</html>
