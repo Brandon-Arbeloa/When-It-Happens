@@ -556,15 +556,13 @@
         <div class="input-section">
             <div class="input-card">
                 <label for="guests">Guest Count</label>
-                <input type="range" id="guests" class="slider" min="1" max="10000" value="50" 
-                       oninput="updateSliderValue('guests', this.value)">
+                <input type="range" id="guests" class="slider" min="1" max="10000" value="50">
                 <div class="slider-value" id="guests-value">50 people</div>
             </div>
 
             <div class="input-card">
                 <label for="budget">Budget</label>
-                <input type="range" id="budget" class="slider" min="100" max="1000000" value="5000" step="100"
-                       oninput="updateSliderValue('budget', this.value)">
+                <input type="range" id="budget" class="slider" min="100" max="1000000" value="5000" step="100">
                 <div class="slider-value" id="budget-value">$5,000</div>
             </div>
 
@@ -614,13 +612,13 @@
         </div>
 
         <div class="action-buttons">
-            <button class="btn btn-primary" onclick="generatePlan()">
+            <button class="btn btn-primary" id="generateBtn">
                 🎉 GENERATE PARTY PLAN
             </button>
-            <button class="btn btn-secondary" onclick="randomizePlan()">
+            <button class="btn btn-secondary" id="randomBtn">
                 🎲 SURPRISE ME
             </button>
-            <button class="btn btn-danger" onclick="panicMode()">
+            <button class="btn btn-danger" id="panicBtn">
                 ⚡ PANIC MODE (5 MIN PARTY)
             </button>
         </div>
@@ -635,16 +633,16 @@
         </div>
 
         <div class="results-section" id="results">
-            <div class="result-tabs">
-                <div class="tab active" onclick="switchTab('overview')">Overview</div>
-                <div class="tab" onclick="switchTab('food')">Food</div>
-                <div class="tab" onclick="switchTab('drinks')">Drinks</div>
-                <div class="tab" onclick="switchTab('decor')">Décor</div>
-                <div class="tab" onclick="switchTab('music')">Music</div>
-                <div class="tab" onclick="switchTab('staffing')">Staffing</div>
-                <div class="tab" onclick="switchTab('safety')">Safety</div>
-                <div class="tab" onclick="switchTab('timeline')">Timeline</div>
-                <div class="tab" onclick="switchTab('upgrades')">Upgrades</div>
+            <div class="result-tabs" id="resultTabs">
+                <div class="tab active" data-tab="overview">Overview</div>
+                <div class="tab" data-tab="food">Food</div>
+                <div class="tab" data-tab="drinks">Drinks</div>
+                <div class="tab" data-tab="decor">Décor</div>
+                <div class="tab" data-tab="music">Music</div>
+                <div class="tab" data-tab="staffing">Staffing</div>
+                <div class="tab" data-tab="safety">Safety</div>
+                <div class="tab" data-tab="timeline">Timeline</div>
+                <div class="tab" data-tab="upgrades">Upgrades</div>
             </div>
 
             <div class="result-content">
@@ -696,22 +694,22 @@
             </div>
 
             <div class="export-buttons">
-                <button class="btn btn-secondary" onclick="exportToExcel()">📊 Export to Excel</button>
-                <button class="btn btn-secondary" onclick="exportToPDF()">📄 Export to PDF</button>
-                <button class="btn btn-primary" onclick="shareParty()">🔗 Share Party Plan</button>
+                <button class="btn btn-secondary" id="exportExcelBtn">📊 Export to Excel</button>
+                <button class="btn btn-secondary" id="exportPDFBtn">📄 Export to PDF</button>
+                <button class="btn btn-primary" id="shareBtn">🔗 Share Party Plan</button>
             </div>
         </div>
     </div>
 
     <!-- Share Modal -->
-    <div class="modal-overlay" id="modalOverlay" onclick="closeShareModal()"></div>
+    <div class="modal-overlay" id="modalOverlay"></div>
     <div class="share-modal" id="shareModal">
         <h3 style="color: var(--neon-pink); margin-bottom: 1rem;">🎉 Share Your Party Plan!</h3>
         <p style="color: var(--text-dim); margin-bottom: 1rem;">Anyone with this link can view your party plan:</p>
         <input type="text" class="share-link-input" id="shareLink" readonly>
         <div style="display: flex; gap: 1rem; margin-top: 1rem;">
-            <button class="btn btn-primary" onclick="copyShareLink()" style="flex: 1;">📋 Copy Link</button>
-            <button class="btn btn-secondary" onclick="closeShareModal()" style="flex: 1;">Close</button>
+            <button class="btn btn-primary" id="copyLinkBtn" style="flex: 1;">📋 Copy Link</button>
+            <button class="btn btn-secondary" id="closeModalBtn" style="flex: 1;">Close</button>
         </div>
         <div class="copy-success" id="copySuccess">✅ Link copied to clipboard!</div>
     </div>
@@ -857,47 +855,92 @@
         let currentPartyPlan = null;
         let selectedTheme = null;
 
-        // Load saved state on page load
-        window.addEventListener('load', async function() {
+        // Event Listeners Setup
+        document.addEventListener('DOMContentLoaded', function() {
+            // Slider listeners
+            document.getElementById('guests').addEventListener('input', function() {
+                updateSliderValue('guests', this.value);
+            });
+            
+            document.getElementById('budget').addEventListener('input', function() {
+                updateSliderValue('budget', this.value);
+            });
+
+            // Button listeners
+            document.getElementById('generateBtn').addEventListener('click', generatePlan);
+            document.getElementById('randomBtn').addEventListener('click', randomizePlan);
+            document.getElementById('panicBtn').addEventListener('click', panicMode);
+            document.getElementById('exportExcelBtn').addEventListener('click', exportToExcel);
+            document.getElementById('exportPDFBtn').addEventListener('click', exportToPDF);
+            document.getElementById('shareBtn').addEventListener('click', shareParty);
+            
+            // Modal listeners
+            document.getElementById('modalOverlay').addEventListener('click', closeShareModal);
+            document.getElementById('copyLinkBtn').addEventListener('click', copyShareLink);
+            document.getElementById('closeModalBtn').addEventListener('click', closeShareModal);
+
+            // Tab listeners
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    switchTab(this.dataset.tab);
+                });
+            });
+
+            // Theme selection
+            document.querySelectorAll('.theme-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    document.querySelectorAll('.theme-option').forEach(o => o.classList.remove('selected'));
+                    this.classList.add('selected');
+                    selectedTheme = this.dataset.theme;
+                    saveState();
+                });
+            });
+
+            // Save state on input changes
+            document.getElementById('guests').addEventListener('change', saveState);
+            document.getElementById('budget').addEventListener('change', saveState);
+            document.getElementById('vibe').addEventListener('change', saveState);
+            document.getElementById('dietary').addEventListener('input', saveState);
+            document.getElementById('alcohol').addEventListener('change', saveState);
+
+            // Load saved state on page load
+            loadSavedState();
+        });
+
+        async function loadSavedState() {
             // Check if there's a party ID in the URL
             const urlParams = new URLSearchParams(window.location.search);
             const partyId = urlParams.get('party');
             
             if (partyId && supabase) {
-                // Load shared party from Supabase
                 await loadSharedParty(partyId);
             } else {
                 // Load from local storage
                 const savedState = localStorage.getItem('partyPlannerState');
                 if (savedState) {
                     const state = JSON.parse(savedState);
-                    // Restore form values
                     document.getElementById('guests').value = state.guests || 50;
                     document.getElementById('budget').value = state.budget || 5000;
                     document.getElementById('vibe').value = state.vibe || 'lively';
                     document.getElementById('dietary').value = state.dietary || '';
                     document.getElementById('alcohol').value = state.alcohol || 'standard';
                     
-                    // Update displays
                     updateSliderValue('guests', state.guests || 50);
                     updateSliderValue('budget', state.budget || 5000);
                     
-                    // Restore theme selection
                     if (state.theme) {
                         selectedTheme = state.theme;
                         document.querySelector(`[data-theme="${state.theme}"]`)?.classList.add('selected');
                     }
                     
-                    // Restore party plan if exists
                     if (state.lastPlan) {
                         currentPartyPlan = state.lastPlan;
                         displayResults(currentPartyPlan);
                     }
                 }
             }
-        });
+        }
 
-        // Load shared party from Supabase
         async function loadSharedParty(partyId) {
             try {
                 showLoading();
@@ -911,13 +954,11 @@
                 if (error) throw error;
                 
                 if (data) {
-                    // Update view count
                     await supabase
                         .from('parties')
                         .update({ view_count: data.view_count + 1 })
                         .eq('id', data.id);
                     
-                    // Restore the party settings
                     document.getElementById('guests').value = data.guest_count;
                     document.getElementById('budget').value = data.budget;
                     document.getElementById('vibe').value = data.vibe;
@@ -927,16 +968,13 @@
                     updateSliderValue('guests', data.guest_count);
                     updateSliderValue('budget', data.budget);
                     
-                    // Set theme
                     selectedTheme = data.theme;
                     document.querySelectorAll('.theme-option').forEach(o => o.classList.remove('selected'));
                     document.querySelector(`[data-theme="${data.theme}"]`)?.classList.add('selected');
                     
-                    // Display the party plan
                     currentPartyPlan = data.party_plan;
                     displayResults(currentPartyPlan);
                     
-                    // Show notification
                     document.getElementById('save-status').textContent = `📥 Loaded shared party plan (viewed ${data.view_count + 1} times)`;
                 }
                 
@@ -948,7 +986,6 @@
             }
         }
 
-        // Save state whenever inputs change
         function saveState() {
             const state = {
                 guests: document.getElementById('guests').value,
@@ -962,23 +999,6 @@
             };
             localStorage.setItem('partyPlannerState', JSON.stringify(state));
         }
-
-        // Add save triggers to all inputs
-        document.getElementById('guests').addEventListener('change', saveState);
-        document.getElementById('budget').addEventListener('change', saveState);
-        document.getElementById('vibe').addEventListener('change', saveState);
-        document.getElementById('dietary').addEventListener('input', saveState);
-        document.getElementById('alcohol').addEventListener('change', saveState);
-
-        // Initialize theme selection
-        document.querySelectorAll('.theme-option').forEach(option => {
-            option.addEventListener('click', function() {
-                document.querySelectorAll('.theme-option').forEach(o => o.classList.remove('selected'));
-                this.classList.add('selected');
-                selectedTheme = this.dataset.theme;
-                saveState(); // Save when theme changes
-            });
-        });
 
         function updateSliderValue(type, value) {
             if (type === 'guests') {
@@ -1010,7 +1030,7 @@
             setTimeout(() => {
                 currentPartyPlan = createPartyPlan(guests, budget, vibe, selectedTheme, dietary, alcohol);
                 displayResults(currentPartyPlan);
-                saveState(); // Save after generating plan
+                saveState();
                 hideLoading();
             }, 1500);
         }
@@ -1026,7 +1046,7 @@
                 budgetPerPerson: Math.floor(budget / guests)
             };
             
-            // Select appropriate food menu based on guest count
+            // Select appropriate food menu
             if (guests <= 20) {
                 plan.foodMenu = partyData.foodMenus.small;
             } else if (guests <= 100) {
@@ -1037,7 +1057,6 @@
                 plan.foodMenu = partyData.foodMenus.massive;
             }
             
-            // Calculate food budget and quantities
             plan.foodBudget = Math.floor(budget * 0.35);
             plan.foodItems = plan.foodMenu.map(item => ({
                 ...item,
@@ -1045,11 +1064,9 @@
                 totalCost: Math.ceil(guests * item.cost)
             }));
             
-            // Set drink menu
             plan.drinkMenu = partyData.drinkMenus[alcohol] || [];
             plan.drinkBudget = Math.floor(budget * 0.25);
             
-            // Calculate drink quantities
             if (plan.drinkMenu.length > 0) {
                 const drinksPerPerson = vibe === 'epic' ? 6 : vibe === 'wild' ? 5 : 3;
                 plan.drinkQuantities = {
@@ -1060,11 +1077,9 @@
                 };
             }
             
-            // Set theme details
             plan.themeDetails = partyData.themes[theme];
             plan.decorBudget = Math.floor(budget * 0.15);
             
-            // Calculate staffing needs
             plan.staff = {
                 bartenders: Math.max(1, Math.ceil(guests / partyData.staffingRatios.bartenders)),
                 servers: Math.ceil(guests / partyData.staffingRatios.servers),
@@ -1074,7 +1089,7 @@
                 cleanup: Math.ceil(guests / partyData.staffingRatios.cleanup)
             };
             
-            // Music setup based on scale
+            // Music setup
             if (guests <= 20) {
                 plan.music = {
                     type: 'Curated Playlist + Bluetooth Speaker',
@@ -1110,10 +1125,8 @@
             if (guests > 1000) plan.safety.push('Police Coordination');
             if (vibe === 'epic') plan.safety.push('Pyrotechnic Permit');
             
-            // Timeline
             plan.timeline = createTimeline(vibe, guests);
             
-            // Upgrades for hard partiers
             plan.upgrades = [];
             if (vibe === 'wild' || vibe === 'epic') {
                 plan.upgrades.push('Laser Light Show - $2,000');
@@ -1318,12 +1331,11 @@
             document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
             document.querySelectorAll('.result-panel').forEach(panel => panel.classList.remove('active'));
             
-            event.target.classList.add('active');
+            document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
             document.getElementById(tabName + '-panel').classList.add('active');
         }
 
         function randomizePlan() {
-            // Randomize all inputs
             const randomGuests = Math.floor(Math.random() * 9999) + 1;
             const randomBudget = Math.floor(Math.random() * 99900) + 100;
             const vibes = ['chill', 'casual', 'lively', 'wild', 'epic'];
@@ -1333,7 +1345,6 @@
             const alcoholOptions = ['none', 'beer-wine', 'standard', 'premium', 'craft', 'unlimited'];
             const randomAlcohol = alcoholOptions[Math.floor(Math.random() * alcoholOptions.length)];
             
-            // Set the random values
             document.getElementById('guests').value = randomGuests;
             updateSliderValue('guests', randomGuests);
             document.getElementById('budget').value = randomBudget;
@@ -1341,17 +1352,14 @@
             document.getElementById('vibe').value = randomVibe;
             document.getElementById('alcohol').value = randomAlcohol;
             
-            // Select random theme
             document.querySelectorAll('.theme-option').forEach(o => o.classList.remove('selected'));
             document.querySelector(`[data-theme="${randomTheme}"]`).classList.add('selected');
             selectedTheme = randomTheme;
             
-            // Generate the plan
             generatePlan();
         }
 
         function panicMode() {
-            // Create a 5-minute party plan
             const guests = parseInt(document.getElementById('guests').value);
             const panicPlan = `
                 <div class="panic-mode">
@@ -1392,7 +1400,6 @@
             document.getElementById('overview-panel').innerHTML = panicPlan;
             document.getElementById('results').classList.add('show');
             
-            // Auto-switch to overview tab
             document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
             document.querySelectorAll('.result-panel').forEach(panel => panel.classList.remove('active'));
             document.querySelector('.tab').classList.add('active');
@@ -1413,7 +1420,6 @@
                 return;
             }
             
-            // Create CSV content
             let csv = 'WHEN IT HAPPENS - Party Plan Export\n\n';
             csv += `Event Details\n`;
             csv += `Guests,${currentPartyPlan.guests}\n`;
@@ -1431,7 +1437,6 @@
                 if (count > 0) csv += `${role},${count}\n`;
             }
             
-            // Download CSV
             const blob = new Blob([csv], { type: 'text/csv' });
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
@@ -1445,8 +1450,6 @@
                 alert('Generate a party plan first!');
                 return;
             }
-            
-            // Simple PDF alternative - open print dialog
             window.print();
         }
 
@@ -1459,10 +1462,8 @@
             try {
                 showLoading();
                 
-                // Generate a short unique ID
                 const shortId = Math.random().toString(36).substring(2, 10);
                 
-                // Save to Supabase
                 const { data, error } = await supabase
                     .from('parties')
                     .insert([{
@@ -1480,15 +1481,12 @@
                 
                 if (error) throw error;
                 
-                // Generate share URL
                 const shareUrl = `${window.location.origin}${window.location.pathname}?party=${shortId}`;
                 
-                // Show share modal
                 document.getElementById('shareLink').value = shareUrl;
                 document.getElementById('shareModal').classList.add('show');
                 document.getElementById('modalOverlay').classList.add('show');
                 
-                // Save to local storage too
                 localStorage.setItem('lastSharedUrl', shareUrl);
                 
                 hideLoading();
@@ -1503,7 +1501,7 @@
         function copyShareLink() {
             const shareLink = document.getElementById('shareLink');
             shareLink.select();
-            shareLink.setSelectionRange(0, 99999); // For mobile
+            shareLink.setSelectionRange(0, 99999);
             
             navigator.clipboard.writeText(shareLink.value).then(() => {
                 document.getElementById('copySuccess').classList.add('show');
